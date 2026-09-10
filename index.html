@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#03120a">
+    <title>Bicho777Bet</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background: #020d07 radial-gradient(circle at 50% 25%, #083b1d 0%, #03150b 50%, #010804 100%) no-repeat fixed;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            padding-bottom: 85px;
+            position: relative;
+            background: radial-gradient(ellipse at 50% 0%, rgba(0, 255, 100, 0.15) 0%, transparent 70%);
+        }
+
+        /* HEADER */
+        .header {
+            width: 100%;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 12px;
+            background: linear-gradient(180deg, #011409 0%, rgba(1, 20, 9, 0.8) 100%);
+            border-bottom: 1px solid rgba(0, 255, 120, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .menu-button {
+            width: 38px;
+            height: 38px;
+            border: 0;
+            background: transparent;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .menu-button span {
+            width: 24px;
+            height: 3px;
+            border-radius: 2px;
+            background: #f1b300;
+        }
+
+        .brand {
+            flex: 1;
+            margin-left: 8px;
+        }
+
+        .brand-name {
+            font-size: 22px;
+            font-weight: 900;
+            font-style: italic;
+            color: #ffc200;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+        }
+
+        .brand-clover {
+            color: #10e36b;
+        }
+
+        .brand-slogan {
+            font-size: 8px;
+            font-weight: 800;
+            letter-spacing: 0.6px;
+            color: #12d564;
+            text-transform: uppercase;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .balance-box {
+            background: linear-gradient(180deg, #001f0d 0%, #001207 100%);
+            border: 1px solid rgba(255, 194, 0, 0.4);
+            border-radius: 8px;
+            padding: 4px 10px;
+            text-align: center;
+        }
+
+        .balance-label {
+            display: block;
+            font-size: 8px;
+            color: #8da496;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .balance-box strong {
+            font-size: 14px;
+            color: #fff;
+            font-weight: 800;
+        }
+
+        .add-button {
+            width: 36px;
+            height: 36px;
+            border: 0;
+            border-radius: 8px;
+            background: linear-gradient(180deg, #1bd96a 0%, #089c44 100%);
+            color: #fff;
+            font-size: 24px;
+            font-weight: 400;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(18, 217, 106, 0.4);
+        }
+
+        /* CONTENT */
+        .content {
+            padding: 10px 10px 0;
+        }
+
+        .top-cards {
+            display: grid;
+            grid-template-columns: 1fr 1.25fr 1fr;
+            gap: 6px;
+        }
+
+        .top-card {
+            border-radius: 12px;
+            border: 1px solid rgba(0, 230, 118, 0.3);
+            background: linear-gradient(180deg, rgba(0, 31, 15, 0.9) 0%, rgba(0, 15, 7, 0.95) 100%);
+            color: #fff;
+            padding: 8px 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .card-symbol {
+            font-size: 20px;
+            color: #ffc200;
+            margin-bottom: 2px;
+        }
+
+        .card-title {
+            font-size: 10px;
+            font-weight: 900;
+            letter-spacing: 0.3px;
+        }
+
+        .card-subtitle {
+            font-size: 8px;
+            color: #7d9487;
+            margin-top: 2px;
+        }
+
+        .next-draw {
+            border: 1.5px solid #ff5500;
+            background: radial-gradient(circle, rgba(90, 20, 0, 0.85) 0%, rgba(25, 5, 0, 0.95) 100%);
+            box-shadow: 0 0 12px rgba(255, 85, 0, 0.4);
+        }
+
+        .next-title {
+            color: #ffc200;
+            font-size: 9px;
+            font-weight: 900;
+        }
+
+        .next-date {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 18px;
+            font-weight: 900;
+            margin: 2px 0;
+        }
+
+        .calendar-icon, .clock-icon {
+            color: #ff7700;
+            font-size: 14px;
+        }
+
+        .next-time {
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            color: #ffc200;
+            font-size: 11px;
+            font-weight: 700;
+        }
+
+        .question-icon {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #ffc200;
+            color: #000;
+            font-size: 12px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 3px;
+        }
+
+        /* PODIUM AREA */
+        .podium-container {
+            margin: 12px 0 6px;
+            padding: 10px 0;
+            background: radial-gradient(ellipse at center, rgba(255, 194, 0, 0.15) 0%, transparent 70%);
+            position: relative;
+        }
+
+        .podium {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .podium-card {
+            border-radius: 10px 10px 4px 4px;
+            text-align: center;
+            padding: 6px 4px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.6);
+            position: relative;
+        }
+
+        .podium-card.second {
+            width: 30%;
+            background: linear-gradient(180deg, #e0e8ec 0%, #8b99a0 40%, #1c2529 100%);
+            border: 1px solid #ffffff;
+        }
+
+        .podium-card.first {
+            width: 35%;
+            background: linear-gradient(180deg, #fff3a1 0%, #f5b000 35%, #3d2400 100%);
+            border: 1px solid #ffe875;
+            z-index: 2;
+        }
+
+        .podium-card.third {
+            width: 30%;
+            background: linear-gradient(180deg, #f7d2b2 0%, #b87340 40%, #2b1406 100%);
+            border: 1px solid #ffca9e;
+        }
+
+        .crown {
+            position: absolute;
+            top: -22px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 22px;
+            color: #ffd700;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.8));
+        }
+
+        .podium-rank {
+            font-size: 10px;
+            font-weight: 900;
+            color: #fff;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.8);
+        }
+
+        .podium-value {
+            font-size: 15px;
+            font-weight: 900;
+            color: #fff;
+            margin-top: 2px;
+            text-shadow: 0 1px 3px rgba(0,0,0,0.9);
+        }
+
+        .first .podium-value {
+            font-size: 17px;
+        }
+
+        /* SECTION TITLE */
+        .animals-heading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 10px 0 8px;
+        }
+
+        .animals-heading h1 {
+            font-size: 14px;
+            font-weight: 900;
+            color: #10e36b;
+            letter-spacing: 1px;
+        }
+
+        .heading-line {
+            color: #10e36b;
+            font-size: 10px;
+            opacity: 0.6;
+        }
+
+        /* TABELA DE BICHOS */
+        .animal-table-wrapper {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+        }
+
+        .animal-table {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            border: 2px solid #a88400;
+            box-shadow: 0 0 15px rgba(0,0,0,0.7);
+            display: block;
+        }
+
+        /* BOTÃO APOSTAR */
+        .bet-button {
+            width: 100%;
+            height: 52px;
+            margin: 12px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-radius: 12px;
+            border: 1px solid #fff2a3;
+            background: linear-gradient(180deg, #ffdb33 0%, #f3a800 60%, #c47f00 100%);
+            color: #050a06;
+            font-size: 16px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(243, 168, 0, 0.4);
+        }
+
+        .bet-button:active {
+            transform: scale(0.98);
+        }
+
+        /* BOTTOM NAV */
+        .bottom-navigation {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 60px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            background: linear-gradient(180deg, #011208 0%, #000a04 100%);
+            border-top: 1px solid rgba(0, 255, 120, 0.2);
+            z-index: 100;
+        }
+
+        .nav-item {
+            border: 0;
+            background: transparent;
+            color: #6e8578;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            cursor: pointer;
+        }
+
+        .nav-icon {
+            font-size: 18px;
+        }
+
+        .nav-label {
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .nav-item.active {
+            color: #10e36b;
+        }
+
+        /* MODAL & MENU */
+        .menu-overlay, .modal {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.8);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 200;
+        }
+
+        .menu-overlay.open, .modal.show {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .side-menu {
+            position: fixed;
+            top: 0; left: 0; bottom: 0;
+            width: 240px;
+            background: #01170b;
+            border-right: 1px solid #10e36b;
+            transform: translateX(-100%);
+            transition: transform 0.25s ease;
+            z-index: 201;
+            padding: 20px;
+        }
+
+        .side-menu.open {
+            transform: translateX(0);
+        }
+
+        .side-menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            color: #ffc200;
+            font-size: 16px;
+            margin-bottom: 20px;
+        }
+
+        .side-menu-header button {
+            background: none;
+            border: 0;
+            color: #fff;
+            font-size: 22px;
+            cursor: pointer;
+        }
+
+        .side-option {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 8px;
+            border: 0;
+            border-radius: 6px;
+            background: rgba(0, 220, 100, 0.1);
+            color: #fff;
+            text-align: left;
+            font-weight: 700;
+            cursor: pointer;
+        }
+
+        .modal {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+            z-index: 300;
+        }
+
+        .modal-box {
+            width: 100%;
+            max-width: 300px;
+            padding: 20px;
+            border-radius: 12px;
+            border: 1px solid #10e36b;
+            background: #011f0f;
+            text-align: center;
+            position: relative;
+        }
+
+        .modal-box h2 {
+            color: #ffc200;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .modal-box p {
+            color: #c4d4cc;
+            font-size: 13px;
+            margin-bottom: 14px;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 8px;
+            right: 10px;
+            border: 0;
+            background: none;
+            color: #fff;
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .modal-action {
+            padding: 8px 20px;
+            border: 0;
+            border-radius: 6px;
+            background: #ffc200;
+            color: #000;
+            font-weight: 900;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- HEADER -->
+        <header class="header">
+            <button class="menu-button" id="menuButton" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
+            <div class="brand">
+                <div class="brand-name">Bicho777Bet <span class="brand-clover">♣</span></div>
+                <div class="brand-slogan">A SORTE É SEU MELHOR PALPITE!</div>
+            </div>
+            <div class="header-right">
+                <div class="balance-box">
+                    <span class="balance-label">SALDO</span>
+                    <strong id="balance">R$ 20,00</strong>
+                </div>
+                <button class="add-button" id="addButton">+</button>
+            </div>
+        </header>
+
+        <!-- CONTEÚDO -->
+        <main class="content">
+            <!-- CARDS SUPERIORES -->
+            <section class="top-cards">
+                <button class="top-card" id="resultButton">
+                    <div class="card-symbol">🏆</div>
+                    <div class="card-title">RESULTADO</div>
+                    <div class="card-subtitle">Último sorteio</div>
+                </button>
+
+                <div class="top-card next-draw">
+                    <div class="next-title">PRÓXIMO SORTEIO:</div>
+                    <div class="next-date">
+                        <span class="calendar-icon">📅</span>
+                        <strong id="drawDate">20/08</strong>
+                    </div>
+                    <div class="next-time">
+                        <span class="clock-icon">🕒</span>
+                        <span>Às</span>
+                        <strong id="drawTime">14:30</strong>
+                    </div>
+                </div>
+
+                <button class="top-card" id="howToPlay">
+                    <div class="question-icon">?</div>
+                    <div class="card-title">COMO JOGAR?</div>
+                    <div class="card-subtitle">Regras do jogo</div>
+                </button>
+            </section>
+
+            <!-- PÓDIO DE PRÊMIOS -->
+            <section class="podium-container">
+                <div class="podium">
+                    <div class="podium-card second">
+                        <div class="podium-rank">2º LUGAR</div>
+                        <div class="podium-value">R$ 200,00</div>
+                    </div>
+                    <div class="podium-card first">
+                        <div class="crown">👑</div>
+                        <div class="podium-rank">1º LUGAR</div>
+                        <div class="podium-value">R$ 500,00</div>
+                    </div>
+                    <div class="podium-card third">
+                        <div class="podium-rank">3º LUGAR</div>
+                        <div class="podium-value">R$ 100,00</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- TÍTULO DA SEÇÃO -->
+            <div class="animals-heading">
+                <span class="heading-line">━━━━</span>
+                <h1>ESCOLHA SEU BICHO</h1>
+                <span class="heading-line">━━━━</span>
+            </div>
+
+            <!-- TABELA (IMAGEM) -->
+            <section class="animal-table-wrapper">
+                <img src="tabela_bichos.png" class="animal-table" alt="Tabela de Bichos">
+            </section>
+
+            <!-- BOTÃO PRINCIPAL DE APOSTA -->
+            <button class="bet-button" id="betButton">
+                <span>🎲</span>
+                <span>FAÇA SUA APOSTA</span>
+                <span>❯</span>
+            </button>
+        </main>
+
+        <!-- NAVEGAÇÃO INFERIOR -->
+        <nav class="bottom-navigation">
+            <button class="nav-item active" data-page="inicio">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Início</span>
+            </button>
+            <button class="nav-item" data-page="apostas">
+                <span class="nav-icon">📋</span>
+                <span class="nav-label">Minhas Apostas</span>
+            </button>
+            <button class="nav-item" data-page="resultados">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Resultados</span>
+            </button>
+            <button class="nav-item" data-page="perfil">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">Perfil</span>
+            </button>
+        </nav>
+    </div>
+
+    <!-- OVERLAY & SIDE MENU -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    <aside class="side-menu" id="sideMenu">
+        <div class="side-menu-header">
+            <strong>Bicho777Bet</strong>
+            <button id="closeMenu">&times;</button>
+        </div>
+        <button class="side-option">🏠 &nbsp; Início</button>
+        <button class="side-option">🎟️ &nbsp; Minhas Apostas</button>
+        <button class="side-option">🏆 &nbsp; Resultados</button>
+        <button class="side-option">👤 &nbsp; Perfil</button>
+        <button class="side-option">❓ &nbsp; Como Jogar</button>
+    </aside>
+
+    <!-- MODAL -->
+    <div class="modal" id="modal">
+        <div class="modal-box">
+            <button class="modal-close" id="modalClose">&times;</button>
+            <h2 id="modalTitle">Bicho777Bet</h2>
+            <p id="modalText">Conteúdo.</p>
+            <button class="modal-action" id="modalAction">OK</button>
+        </div>
+    </div>
+
+    <script>
+        const menuButton = document.getElementById("menuButton");
+        const closeMenu = document.getElementById("closeMenu");
+        const sideMenu = document.getElementById("sideMenu");
+        const menuOverlay = document.getElementById("menuOverlay");
+
+        const modal = document.getElementById("modal");
+        const modalTitle = document.getElementById("modalTitle");
+        const modalText = document.getElementById("modalText");
+        const modalClose = document.getElementById("modalClose");
+        const modalAction = document.getElementById("modalAction");
+
+        function toggleMenu(open) {
+            sideMenu.classList.toggle("open", open);
+            menuOverlay.classList.toggle("open", open);
+        }
+
+        menuButton.addEventListener("click", () => toggleMenu(true));
+        closeMenu.addEventListener("click", () => toggleMenu(false));
+        menuOverlay.addEventListener("click", () => toggleMenu(false));
+
+        function showModal(title, text) {
+            modalTitle.textContent = title;
+            modalText.textContent = text;
+            modal.classList.add("show");
+        }
+
+        function closeModal() {
+            modal.classList.remove("show");
+        }
+
+        modalClose.addEventListener("click", closeModal);
+        modalAction.addEventListener("click", closeModal);
+        modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+
+        document.getElementById("resultButton").addEventListener("click", () => {
+            showModal("Último Sorteio", "Confira o resultado do último sorteio.");
+        });
+
+        document.getElementById("howToPlay").addEventListener("click", () => {
+            showModal("Como Jogar?", "Escolha seu bicho na tabela, selecione o valor e confirme sua aposta.");
+        });
+
+        document.getElementById("betButton").addEventListener("click", () => {
+            showModal("Aposta", "Selecione o bicho e o tipo de aposta na próxima tela.");
+        });
+
+        document.getElementById("addButton").addEventListener("click", () => {
+            showModal("Depósito", "Área para adicionar saldo via Pix.");
+        });
+
+        const navItems = document.querySelectorAll(".nav-item");
+        navItems.forEach(item => {
+            item.addEventListener("click", function() {
+                navItems.forEach(n => n.classList.remove("active"));
+                this.classList.add("active");
+
+                const page = this.dataset.page;
+                if (page === "inicio") window.scrollTo({ top: 0, behavior: "smooth" });
+                if (page === "apostas") showModal("Minhas Apostas", "Histórico de apostas realizadas.");
+                if (page === "resultados") showModal("Resultados", "Todos os resultados dos sorteios.");
+                if (page === "perfil") showModal("Perfil", "Gerenciamento da sua conta.");
+            });
+        });
+
+        document.querySelectorAll(".side-option").forEach(option => {
+            option.addEventListener("click", () => toggleMenu(false));
+        });
+    </script>
+</body>
+</html>
