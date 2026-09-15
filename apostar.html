@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#03120a">
-    <title>Faça sua Aposta - Bicho777Bet</title>
+    <title>Escolha os Palpites - Bicho777Bet</title>
     
     <style>
         * {
@@ -20,7 +20,6 @@
             background: #020d07 radial-gradient(circle at 50% 25%, #083b1d 0%, #03150b 50%, #010804 100%) no-repeat fixed;
             color: #fff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            overflow-x: hidden;
             display: flex;
             justify-content: center;
         }
@@ -29,162 +28,44 @@
             width: 100%;
             max-width: 480px;
             min-height: 100vh;
-            padding-bottom: 30px;
-            position: relative;
+            padding: 12px;
             background: radial-gradient(ellipse at 50% 0%, rgba(0, 255, 100, 0.15) 0%, transparent 70%);
         }
 
-        /* HEADER */
         .header {
-            width: 100%;
-            height: 70px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 12px;
-            background: linear-gradient(180deg, #011409 0%, rgba(1, 20, 9, 0.8) 100%);
+            height: 50px;
             border-bottom: 1px solid rgba(0, 255, 120, 0.15);
-            position: sticky;
-            top: 0;
-            z-index: 50;
+            margin-bottom: 12px;
         }
 
         .back-button {
-            background: transparent;
-            border: 0;
             color: #ffc200;
             font-size: 24px;
-            font-weight: bold;
-            cursor: pointer;
             text-decoration: none;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 38px;
-            height: 38px;
+            font-weight: bold;
         }
 
-        .brand {
-            flex: 1;
-            margin-left: 8px;
-        }
-
-        .brand-name {
-            font-size: 20px;
-            font-weight: 900;
-            font-style: italic;
-            color: #ffc200;
-            letter-spacing: -0.5px;
-        }
-
-        .brand-clover {
-            color: #10e36b;
-        }
-
-        .balance-box {
-            background: linear-gradient(180deg, #001f0d 0%, #001207 100%);
-            border: 1px solid rgba(255, 194, 0, 0.4);
+        .info-card {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #ffc200;
             border-radius: 8px;
-            padding: 4px 10px;
-            text-align: center;
-        }
-
-        .balance-label {
-            display: block;
-            font-size: 8px;
-            color: #8da496;
-            font-weight: 700;
-        }
-
-        .balance-box strong {
-            font-size: 14px;
-            color: #fff;
-            font-weight: 800;
-        }
-
-        /* CONTENT */
-        .content {
-            padding: 12px;
-        }
-
-        .bet-card {
-            background: radial-gradient(circle at 50% 0%, #033618 0%, #011409 60%, #000a04 100%);
-            border: 2px solid #e5ad00;
-            border-radius: 18px;
-            box-shadow: 0 0 25px rgba(255, 194, 0, 0.35);
-            padding: 12px;
-        }
-
-        .bet-header-box {
-            text-align: center;
-            padding: 10px;
-            border: 1.5px solid #ffc200;
-            border-radius: 12px;
-            background: linear-gradient(180deg, rgba(255, 194, 0, 0.15) 0%, rgba(0, 0, 0, 0.6) 100%);
+            padding: 8px 12px;
             margin-bottom: 12px;
-        }
-
-        .bet-banner {
-            background: linear-gradient(180deg, #ffd328 0%, #f3b800 60%, #d99500 100%);
-            color: #000;
-            border-radius: 8px;
-            padding: 6px;
-            border: 1px solid #fff2a3;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-        }
-
-        .bet-banner strong {
-            display: block;
-            font-size: 14px;
-            font-weight: 900;
-        }
-
-        .bet-banner span {
-            font-size: 9px;
-            font-weight: 800;
-        }
-
-        /* SEÇÃO GRUPO E DEZENAS */
-        .bet-section-box {
-            border: 1px solid #10e36b;
-            border-radius: 10px;
-            padding: 8px;
-            background: rgba(1, 20, 9, 0.7);
-            margin-bottom: 12px;
-        }
-
-        .bet-section-header {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            margin-bottom: 8px;
-        }
-
-        .bet-section-title {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 15px;
-            font-weight: 900;
+            font-size: 12px;
             color: #ffc200;
+            font-weight: bold;
         }
 
-        .bet-section-subtitle {
-            font-size: 8px;
-            color: #a3c2b0;
-            text-align: right;
-            max-width: 140px;
-            font-weight: 700;
-        }
-
-        /* GRIDS DE BOTÕES */
         .grid-numbers {
             display: grid;
             grid-template-columns: repeat(10, 1fr);
             gap: 3px;
+            margin-bottom: 16px;
         }
 
         .bet-num-btn {
@@ -194,7 +75,7 @@
             color: #fff;
             font-size: 10px;
             font-weight: 800;
-            padding: 6px 0;
+            padding: 8px 0;
             cursor: pointer;
             text-align: center;
         }
@@ -206,40 +87,7 @@
             box-shadow: 0 0 6px #ffc200;
         }
 
-        /* PAINEL DE VALOR E APOSTA */
-        .bet-input-box {
-            border: 1px solid #ffc200;
-            border-radius: 10px;
-            padding: 10px;
-            background: rgba(0, 0, 0, 0.5);
-            margin-bottom: 12px;
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .bet-input-label {
-            font-size: 11px;
-            color: #ffc200;
-            font-weight: 800;
-            display: flex;
-            justify-content: space-between;
-        }
-
-        .bet-input-field {
-            width: 100%;
-            height: 40px;
-            background: #011409;
-            border: 1px solid #10e36b;
-            border-radius: 6px;
-            color: #fff;
-            font-size: 16px;
-            font-weight: 800;
-            padding: 0 10px;
-            outline: none;
-        }
-
-        .submit-bet-btn {
+        .submit-btn {
             width: 100%;
             height: 50px;
             border-radius: 12px;
@@ -252,217 +100,100 @@
             box-shadow: 0 4px 15px rgba(243, 168, 0, 0.4);
         }
 
-        .submit-bet-btn:active {
-            transform: scale(0.98);
-        }
-
-        /* MODAL CONFIRMAÇÃO */
-        .modal {
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.8);
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.2s;
-            z-index: 300;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-        }
-
-        .modal.show {
-            opacity: 1;
-            pointer-events: auto;
-        }
-
-        .modal-box {
-            width: 100%;
-            max-width: 300px;
-            padding: 20px;
-            border-radius: 12px;
-            border: 1px solid #10e36b;
-            background: #011f0f;
-            text-align: center;
-        }
-
-        .modal-box h2 {
-            color: #ffc200;
-            margin-bottom: 8px;
-            font-size: 16px;
-        }
-
-        .modal-box p {
-            color: #c4d4cc;
-            font-size: 13px;
-            margin-bottom: 14px;
-        }
-
-        .modal-action {
-            padding: 8px 20px;
-            border: 0;
-            border-radius: 6px;
-            background: #ffc200;
-            color: #000;
-            font-weight: 900;
-            cursor: pointer;
+        .hidden {
+            display: none;
         }
     </style>
 </head>
 <body>
     <div class="app">
-        <!-- HEADER -->
         <header class="header">
-            <a href="index.html" class="back-button">❮</a>
-            <div class="brand">
-                <div class="brand-name">Bicho777Bet <span class="brand-clover">♣</span></div>
-            </div>
-            <div class="balance-box">
-                <span class="balance-label">SALDO</span>
-                <strong id="balance">R$ 20,00</strong>
-            </div>
+            <a href="valor.html" class="back-button">❮</a>
+            <span style="color:#ffc200; font-weight:900;">ESCOLHA SEUS PALPITES</span>
+            <div></div>
         </header>
 
-        <!-- CONTEÚDO PRINCIPAL DE APOSTA -->
-        <main class="content">
-            <div class="bet-card">
-                <div class="bet-header-box">
-                    <div class="bet-banner">
-                        <span>🎲</span>
-                        <div>
-                            <strong>FAÇA SUA APOSTA</strong>
-                            <span>ESCOLHA GRUPO OU DEZENA</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SEÇÃO GRUPO -->
-                <div class="bet-section-box">
-                    <div class="bet-section-header">
-                        <div class="bet-section-title">
-                            <span>🐾</span> GRUPO
-                        </div>
-                        <div class="bet-section-subtitle">
-                            ESCOLHA UM DOS 25 GRUPOS!
-                        </div>
-                    </div>
-                    <div class="grid-numbers" id="gridGroups"></div>
-                </div>
-
-                <!-- SEÇÃO DEZENAS -->
-                <div class="bet-section-box">
-                    <div class="bet-section-header">
-                        <div class="bet-section-title">
-                            <span>#</span> DEZENAS
-                        </div>
-                        <div class="bet-section-subtitle">
-                            ESCOLHA UMA DAS 100 DEZENAS (00-99)!
-                        </div>
-                    </div>
-                    <div class="grid-numbers" id="gridDezenas"></div>
-                </div>
-
-                <!-- VALOR DA APOSTA -->
-                <div class="bet-input-box">
-                    <div class="bet-input-label">
-                        <span>VALOR DA APOSTA (R$)</span>
-                        <span id="selectedType">SELEÇÃO: NENHUMA</span>
-                    </div>
-                    <input type="number" id="betValue" class="bet-input-field" placeholder="0,00" min="1" step="1">
-                </div>
-
-                <!-- BOTÃO CONFIRMAR -->
-                <button class="submit-bet-btn" id="confirmBetBtn">CONFIRMAR APOSTA ❯</button>
-            </div>
-        </main>
-    </div>
-
-    <!-- MODAL INFORMATIVO -->
-    <div class="modal" id="modal">
-        <div class="modal-box">
-            <h2 id="modalTitle">Bicho777Bet</h2>
-            <p id="modalText">Mensagem</p>
-            <button class="modal-action" id="modalAction">OK</button>
+        <div class="info-card">
+            <span id="infoType">TIPO: -</span>
+            <span id="infoValue">VALOR: R$ 0,00</span>
+            <span id="infoLimit">LIMITE: 0</span>
         </div>
+
+        <!-- CONTAINER GRUPOS -->
+        <div id="groupsContainer" class="hidden">
+            <h3 style="color:#10e36b; font-size: 12px; margin-bottom:8px;">SELECIONE O GRUPO:</h3>
+            <div class="grid-numbers" id="gridGroups"></div>
+        </div>
+
+        <!-- CONTAINER DEZENAS -->
+        <div id="dezenasContainer" class="hidden">
+            <h3 style="color:#10e36b; font-size: 12px; margin-bottom:8px;">SELECIONE AS DEZENAS:</h3>
+            <div class="grid-numbers" id="gridDezenas"></div>
+        </div>
+
+        <button class="submit-btn" id="confirmBet">FINALIZAR APOSTA ❯</button>
     </div>
 
     <script>
-        let selection = { type: null, value: null };
+        const urlParams = new URLSearchParams(window.location.search);
+        const betType = urlParams.get('type');
+        const betVal = urlParams.get('val');
+        const maxSelections = parseInt(urlParams.get('max')) || 1;
 
-        const gridGroups = document.getElementById("gridGroups");
-        const gridDezenas = document.getElementById("gridDezenas");
-        const selectedTypeLabel = document.getElementById("selectedType");
-        const betValueInput = document.getElementById("betValue");
-        const confirmBetBtn = document.getElementById("confirmBetBtn");
+        let selectedItems = [];
 
-        const modal = document.getElementById("modal");
-        const modalTitle = document.getElementById("modalTitle");
-        const modalText = document.getElementById("modalText");
-        const modalAction = document.getElementById("modalAction");
+        document.getElementById('infoType').textContent = `TIPO: ${betType === 'grupo' ? 'GRUPO' : 'DEZENA'}`;
+        document.getElementById('infoValue').textContent = `VALOR: R$ ${parseFloat(betVal).toFixed(2)}`;
+        document.getElementById('infoLimit').textContent = `LIMITE: ${maxSelections}`;
 
-        function showModal(title, text, callback) {
-            modalTitle.textContent = title;
-            modalText.textContent = text;
-            modal.classList.add("show");
-            modalAction.onclick = () => {
-                modal.classList.remove("show");
-                if (callback) callback();
-            };
+        if (betType === 'grupo') {
+            const container = document.getElementById('groupsContainer');
+            container.classList.remove('hidden');
+            const grid = document.getElementById('gridGroups');
+
+            for (let i = 1; i <= 25; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'bet-num-btn';
+                btn.textContent = i;
+                btn.addEventListener('click', () => handleSelect(btn, i));
+                grid.appendChild(btn);
+            }
+        } else {
+            const container = document.getElementById('dezenasContainer');
+            container.classList.remove('hidden');
+            const grid = document.getElementById('gridDezenas');
+
+            for (let i = 0; i <= 99; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'bet-num-btn';
+                const val = i.toString().padStart(2, '0');
+                btn.textContent = val;
+                btn.addEventListener('click', () => handleSelect(btn, val));
+                grid.appendChild(btn);
+            }
         }
 
-        // Limpar seleções ativas
-        function clearSelections() {
-            document.querySelectorAll(".bet-num-btn").forEach(b => b.classList.remove("selected"));
+        function handleSelect(btn, item) {
+            if (selectedItems.includes(item)) {
+                selectedItems = selectedItems.filter(i => i !== item);
+                btn.classList.remove('selected');
+            } else {
+                if (selectedItems.length >= maxSelections) {
+                    alert(`Você pode selecionar no máximo ${maxSelections} opção(ões).`);
+                    return;
+                }
+                selectedItems.push(item);
+                btn.classList.add('selected');
+            }
         }
 
-        // Gerar Botões dos Grupos (1 a 25)
-        for (let i = 1; i <= 25; i++) {
-            const btn = document.createElement("button");
-            btn.className = "bet-num-btn";
-            btn.textContent = i;
-            btn.addEventListener("click", () => {
-                clearSelections();
-                btn.classList.add("selected");
-                selection = { type: "Grupo", value: i };
-                selectedTypeLabel.textContent = `GRUPO: ${i}`;
-            });
-            gridGroups.appendChild(btn);
-        }
-
-        // Gerar Botões das Dezenas (00 a 99)
-        for (let i = 0; i <= 99; i++) {
-            const btn = document.createElement("button");
-            btn.className = "bet-num-btn";
-            const val = i.toString().padStart(2, '0');
-            btn.textContent = val;
-            btn.addEventListener("click", () => {
-                clearSelections();
-                btn.classList.add("selected");
-                selection = { type: "Dezena", value: val };
-                selectedTypeLabel.textContent = `DEZENA: ${val}`;
-            });
-            gridDezenas.appendChild(btn);
-        }
-
-        // Validar e Confirmar Aposta
-        confirmBetBtn.addEventListener("click", () => {
-            const amount = parseFloat(betValueInput.value);
-
-            if (!selection.type) {
-                showModal("Atenção", "Por favor, selecione um Grupo ou uma Dezena para apostar.");
+        document.getElementById('confirmBet').addEventListener('click', () => {
+            if (selectedItems.length === 0) {
+                alert('Selecione ao menos um palpite.');
                 return;
             }
-
-            if (isNaN(amount) || amount <= 0) {
-                showModal("Atenção", "Insira um valor válido para a aposta.");
-                return;
-            }
-
-            showModal(
-                "Aposta Realizada!", 
-                `Você apostou R$ ${amount.toFixed(2)} no ${selection.type} ${selection.value}. Boa sorte!`,
-                () => { window.location.href = "index.html"; }
-            );
+            alert(`Aposta confirmada com sucesso!\nPalpites: ${selectedItems.join(', ')}\nValor: R$ ${betVal}`);
+            window.location.href = 'index.html';
         });
     </script>
 </body>
