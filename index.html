@@ -353,6 +353,7 @@
             font-weight: 900;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(243, 168, 0, 0.4);
+            text-decoration: none;
         }
 
         .bet-button:active {
@@ -597,12 +598,11 @@
             </section>
 
             <!-- BOTÃO PRINCIPAL DE APOSTA -->
-            <!-- Em vez de button, use a tag <a> na tela principal -->
-<a href="apostar.html" class="bet-button">
-    <span>🎲</span>
-    <span>FAÇA SUA APOSTA</span>
-    <span>❯</span>
-</a>
+            <a href="apostar.html" class="bet-button">
+                <span>🎲</span>
+                <span>FAÇA SUA APOSTA</span>
+                <span>❯</span>
+            </a>
 
         </main>
 
@@ -692,10 +692,6 @@
 
         document.getElementById("howToPlay").addEventListener("click", () => {
             showModal("Como Jogar?", "Escolha seu bicho na tabela, selecione o valor e confirme sua aposta.");
-        });
-
-        document.getElementById("betButton").addEventListener("click", () => {
-            showModal("Aposta", "Selecione o bicho e o tipo de aposta na próxima tela.");
         });
 
         document.getElementById("addButton").addEventListener("click", () => {
