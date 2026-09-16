@@ -84,10 +84,11 @@ app.post('/api/pagamentos/pix', async (req, res) => {
                 last_name: 'Usuario',
                 identification: {
                     type: 'CPF',
-                    number: '85223307040' // CPF válido em produção sem caracteres especiais
+                    number: '85223307040'
                 }
             },
-            notification_url: process.env.WEBHOOK_URL
+            // Fallback direto caso a variável de ambiente do Render não seja encontrada
+            notification_url: process.env.WEBHOOK_URL || 'https://bing-j6vi.onrender.com/api/webhooks/mercadopago'
         };
 
         const mpResponse = await payment.create({ body });
