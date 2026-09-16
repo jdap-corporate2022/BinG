@@ -13,7 +13,7 @@ const pool = new Pool({
     connectionString: process.env.DATABASE_URL
 });
 
-// Inicialização do Schema
+// Inicialização do Schema e Usuário Padrão
 const initDb = async () => {
     try {
         await pool.query(`
@@ -50,8 +50,18 @@ const initDb = async () => {
                 criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
+
+            -- Cria o usuário padrão ID 1 caso não exista nenhum no banco
+            INSERT INTO usuarios (id, nome, email) 
+            VALUES (1, 'Usuário Visitante', 'visitante@bicho777.com')
+            ON CONFLICT (id) DO NOTHING;
+
+            -- Cria a carteira vinculada ao usuário ID 1
+            INSERT INTO carteiras (usuario_id, saldo)
+            VALUES (1, 0.00)
+            ON CONFLICT DO NOTHING;
         `);
-        console.log("Banco de dados pronto e tabelas verificadas.");
+        console.log("Banco de dados e usuário Visitante inicializados.");
     } catch (err) {
         console.error("Erro ao inicializar banco de dados:", err);
     }
@@ -69,13 +79,12 @@ const payment = new Payment(client);
 app.post('/api/pagamentos/pix', async (req, res) => {
     const { usuario_id, valor, email_usuario } = req.body;
 
-    if (!valor || valor <= 0) {
-        return res.status(400).json({ error: 'Valor inválido para depósito.' });
-    }
+    // Se o frontend não mandar valor, usa 2.00 por padrão.
+    const valorFinal = Number(valor) > 0 ? Number(valor) : 2.00;
 
     try {
         const body = {
-            transaction_amount: Number(valor),
+            transaction_amount: valorFinal,
             description: 'Deposito de Saldo - Bicho777Bet',
             payment_method_id: 'pix',
             payer: {
@@ -87,15 +96,15 @@ app.post('/api/pagamentos/pix', async (req, res) => {
                     number: '85223307040'
                 }
             },
-            // Fallback direto caso a variável de ambiente do Render não seja encontrada
             notification_url: process.env.WEBHOOK_URL || 'https://bing-j6vi.onrender.com/api/webhooks/mercadopago'
         };
 
         const mpResponse = await payment.create({ body });
 
+        // Associa sempre ao usuário 1 caso não seja informado outro no frontend
         await pool.query(
             'INSERT INTO pagamentos_pix (usuario_id, mp_payment_id, valor, status) VALUES ($1, $2, $3, $4)',
-            [usuario_id || 1, mpResponse.id, valor, mpResponse.status]
+            [usuario_id || 1, mpResponse.id, valorFinal, mpResponse.status]
         );
 
         res.status(200).json({
