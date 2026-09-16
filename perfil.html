@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#03120a">
+    <title>Perfil - Bicho777Bet</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background: #020d07 radial-gradient(circle at 50% 25%, #083b1d 0%, #03150b 50%, #010804 100%) no-repeat fixed;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            padding-bottom: 85px;
+            position: relative;
+            background: radial-gradient(ellipse at 50% 0%, rgba(0, 255, 100, 0.15) 0%, transparent 70%);
+        }
+
+        /* HEADER */
+        .header {
+            width: 100%;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            background: linear-gradient(180deg, #011409 0%, rgba(1, 20, 9, 0.8) 100%);
+            border-bottom: 1px solid rgba(0, 255, 120, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: #ffc200;
+            font-size: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 900;
+            color: #ffc200;
+            letter-spacing: -0.5px;
+        }
+
+        /* CONTENT */
+        .content {
+            padding: 16px;
+        }
+
+        /* USER CARD */
+        .user-card {
+            background: linear-gradient(180deg, rgba(0, 31, 15, 0.95) 0%, rgba(0, 15, 7, 0.98) 100%);
+            border: 1px solid rgba(0, 255, 120, 0.25);
+            border-radius: 12px;
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .avatar-circle {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(180deg, #ffdb33 0%, #f3a800 100%);
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 900;
+            border: 2px solid #fff;
+        }
+
+        .user-info {
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 16px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .user-email {
+            font-size: 12px;
+            color: #8da496;
+            margin-top: 2px;
+        }
+
+        /* MENU DE OPÇÕES */
+        .section-title {
+            font-size: 11px;
+            font-weight: 800;
+            color: #10e36b;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+            padding-left: 4px;
+        }
+
+        .options-group {
+            background: linear-gradient(180deg, rgba(0, 31, 15, 0.8) 0%, rgba(0, 15, 7, 0.9) 100%);
+            border: 1px solid rgba(0, 255, 120, 0.15);
+            border-radius: 12px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .option-item {
+            width: 100%;
+            padding: 14px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            color: #fff;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .option-item:last-child {
+            border-bottom: none;
+        }
+
+        .option-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .option-icon {
+            font-size: 18px;
+        }
+
+        .option-arrow {
+            color: #7d9487;
+            font-size: 14px;
+        }
+
+        .logout-btn {
+            width: 100%;
+            padding: 14px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 85, 85, 0.4);
+            background: rgba(255, 0, 0, 0.1);
+            color: #ff5555;
+            font-size: 14px;
+            font-weight: 800;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        /* BOTTOM NAV */
+        .bottom-navigation {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 60px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            background: linear-gradient(180deg, #011208 0%, #000a04 100%);
+            border-top: 1px solid rgba(0, 255, 120, 0.2);
+            z-index: 100;
+        }
+
+        .nav-item {
+            border: 0;
+            background: transparent;
+            color: #6e8578;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-icon {
+            font-size: 18px;
+        }
+
+        .nav-label {
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .nav-item.active {
+            color: #10e36b;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- HEADER -->
+        <header class="header">
+            <a href="index.html" class="back-button">❮ Voltar</a>
+            <div class="header-title">Meu Perfil</div>
+            <div style="width: 50px;"></div>
+        </header>
+
+        <!-- CONTEÚDO -->
+        <main class="content">
+            <!-- CARTÃO DO USUÁRIO -->
+            <div class="user-card">
+                <div class="avatar-circle" id="userAvatar">U</div>
+                <div class="user-info">
+                    <div class="user-name" id="userName">Carregando...</div>
+                    <div class="user-email" id="userEmail">...</div>
+                </div>
+            </div>
+
+            <!-- OPÇÕES FINANCEIRAS -->
+            <div class="section-title">Financeiro</div>
+            <div class="options-group">
+                <a href="deposito.html" class="option-item">
+                    <div class="option-left">
+                        <span class="option-icon">💵</span>
+                        <span>Depositar Saldo</span>
+                    </div>
+                    <span class="option-arrow">❯</span>
+                </a>
+                <button class="option-item" onclick="alert('Funcionalidade de saque em breve!')">
+                    <div class="option-left">
+                        <span class="option-icon">🏦</span>
+                        <span>Solicitar Saque</span>
+                    </div>
+                    <span class="option-arrow">❯</span>
+                </button>
+                <a href="minhas-apostas.html" class="option-item">
+                    <div class="option-left">
+                        <span class="option-icon">📋</span>
+                        <span>Histórico de Apostas</span>
+                    </div>
+                    <span class="option-arrow">❯</span>
+                </a>
+            </div>
+
+            <!-- OPÇÕES DA CONTA -->
+            <div class="section-title">Minha Conta</div>
+            <div class="options-group">
+                <button class="option-item" onclick="alert('Em breve!')">
+                    <div class="option-left">
+                        <span class="option-icon">🔒</span>
+                        <span>Alterar Senha</span>
+                    </div>
+                    <span class="option-arrow">❯</span>
+                </button>
+                <button class="option-item" onclick="alert('Suporte via WhatsApp: (00) 00000-0000')">
+                    <div class="option-left">
+                        <span class="option-icon">💬</span>
+                        <span>Suporte ao Cliente</span>
+                    </div>
+                    <span class="option-arrow">❯</span>
+                </button>
+            </div>
+
+            <!-- BOTÃO SAIR -->
+            <button class="logout-btn" onclick="fazerLogout()">
+                <span>🚪</span>
+                <span>Sair da Conta</span>
+            </button>
+        </main>
+
+        <!-- NAVEGAÇÃO INFERIOR -->
+        <nav class="bottom-navigation">
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Início</span>
+            </a>
+            <a href="minhas-apostas.html" class="nav-item">
+                <span class="nav-icon">📋</span>
+                <span class="nav-label">Minhas Apostas</span>
+            </a>
+            <a href="resultados.html" class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Resultados</span>
+            </a>
+            <a href="perfil.html" class="nav-item active">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">Perfil</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        const API_URL = 'https://bing-j6vi.onrender.com';
+
+        async function carregarDadosPerfil() {
+            try {
+                // Busca dados do usuário (ID 1 de exemplo)
+                const res = await fetch(`${API_URL}/api/usuario/1`);
+                const usuario = await res.json();
+
+                if (usuario && usuario.nome) {
+                    document.getElementById('userName').textContent = usuario.nome;
+                    document.getElementById('userEmail').textContent = usuario.email || 'usuario@bicho777.com';
+                    document.getElementById('userAvatar').textContent = usuario.nome.charAt(0).toUpperCase();
+                } else {
+                    document.getElementById('userName').textContent = 'Jogador Bicho777';
+                    document.getElementById('userEmail').textContent = 'jogador@bicho777.com';
+                }
+            } catch (err) {
+                console.error('Erro ao buscar dados do perfil:', err);
+                document.getElementById('userName').textContent = 'Jogador Bicho777';
+                document.getElementById('userEmail').textContent = 'jogador@bicho777.com';
+            }
+        }
+
+        function fazerLogout() {
+            if (confirm('Deseja realmente sair da sua conta?')) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        carregarDadosPerfil();
+    </script>
+</body>
+</html>
