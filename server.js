@@ -87,11 +87,7 @@ app.post('/api/pagamentos/pix', async (req, res) => {
             payer: {
                 email: email_usuario || 'comprador.teste@gmail.com',
                 first_name: 'Cliente',
-                last_name: 'Usuario',
-                identification: {
-                    type: 'CPF',
-                    number: '85223307040'
-                }
+                last_name: 'Usuario'
             },
             notification_url: 'https://bing-j6vi.onrender.com/api/webhooks/mercadopago'
         };
