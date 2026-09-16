@@ -73,6 +73,24 @@ const client = new MercadoPagoConfig({
 });
 const payment = new Payment(client);
 
+// ROTA: Buscar Saldo do Usuário
+app.get('/api/usuario/:id/saldo', async (req, res) => {
+    const { id } = req.params;
+    try {
+        const result = await pool.query(
+            'SELECT saldo FROM carteiras WHERE usuario_id = $1',
+            [id]
+        );
+        if (result.rows.length === 0) {
+            return res.json({ saldo: 0.00 });
+        }
+        res.json({ saldo: parseFloat(result.rows[0].saldo) });
+    } catch (error) {
+        console.error('Erro ao buscar saldo:', error);
+        res.status(500).json({ error: 'Erro ao consultar saldo.' });
+    }
+});
+
 // ROTA 1: Gerar PIX
 app.post('/api/pagamentos/pix', async (req, res) => {
     const { usuario_id, valor, email_usuario } = req.body;
