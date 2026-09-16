@@ -14,7 +14,7 @@ const pool = new Pool({
     connectionString: process.env.DATABASE_URL
 });
 
-// Inicialização do Schema, Tabelas e Migrações
+// Inicialização do Schema sem a coluna email
 const initDb = async () => {
     try {
         await pool.query(`
@@ -23,7 +23,6 @@ const initDb = async () => {
                 nome VARCHAR(100) NOT NULL,
                 telefone VARCHAR(50) UNIQUE NOT NULL,
                 senha VARCHAR(255) NOT NULL,
-                email VARCHAR(100),
                 is_admin BOOLEAN DEFAULT FALSE,
                 criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
@@ -67,11 +66,11 @@ const initDb = async () => {
             );
         `);
 
-        // Executa comandos de alteração de forma independente para evitar falha em bloco
+        // Remove a coluna email da tabela se ela já existir no banco
         try {
-            await pool.query('ALTER TABLE usuarios ALTER COLUMN email DROP NOT NULL;');
+            await pool.query('ALTER TABLE usuarios DROP COLUMN IF EXISTS email;');
         } catch (e) {
-            console.log("Nota: Coluna email já é opcional ou não pôde ser alterada.");
+            console.log("Nota: Coluna email já foi removida.");
         }
 
         try {
@@ -80,12 +79,12 @@ const initDb = async () => {
             console.log("Nota: Coluna is_admin já existe.");
         }
 
-        // Criação automática do usuário administrador
+        // Criar Usuário Admin Padrão
         const adminCheck = await pool.query("SELECT id FROM usuarios WHERE telefone = 'admin'");
         if (adminCheck.rows.length === 0) {
             const hashSenhaAdmin = await bcrypt.hash('@Dell8245', 10);
             await pool.query(
-                "INSERT INTO usuarios (nome, telefone, senha, email, is_admin) VALUES ('Administrador', 'admin', $1, 'admin@bicho777.com', TRUE)",
+                "INSERT INTO usuarios (nome, telefone, senha, is_admin) VALUES ('Administrador', 'admin', $1, TRUE)",
                 [hashSenhaAdmin]
             );
             console.log("Usuário Administrador 'admin' criado com sucesso.");
@@ -138,7 +137,7 @@ app.post('/api/admin/login', async (req, res) => {
     }
 });
 
-// ROTA: Cadastro de Usuário (Corrigida para evitar erro de NOT NULL)
+// ROTA: Cadastro de Usuário (100% livre de e-mail)
 app.post('/api/auth/cadastro', async (req, res) => {
     const { nome, telefone, senha } = req.body;
 
@@ -153,13 +152,10 @@ app.post('/api/auth/cadastro', async (req, res) => {
         }
 
         const hashSenha = await bcrypt.hash(senha, 10);
-        
-        // Passa uma string padronizada no email para evitar erro caso a coluna ainda exija valor no PostgreSQL
-        const emailFallback = `${telefone}@bicho777.com`;
 
         const newUser = await pool.query(
-            'INSERT INTO usuarios (nome, telefone, senha, email) VALUES ($1, $2, $3, $4) RETURNING id, nome, telefone',
-            [nome, telefone, hashSenha, emailFallback]
+            'INSERT INTO usuarios (nome, telefone, senha) VALUES ($1, $2, $3) RETURNING id, nome, telefone',
+            [nome, telefone, hashSenha]
         );
 
         const userId = newUser.rows[0].id;
@@ -232,7 +228,7 @@ app.get('/api/usuario/:id/saldo', async (req, res) => {
 
 // ROTA: Gerar PIX (Depósito)
 app.post('/api/pagamentos/pix', async (req, res) => {
-    const { usuario_id, valor, email_usuario } = req.body;
+    const { usuario_id, valor } = req.body;
 
     const valorFinal = Number(valor) >= 1 ? Number(valor) : 2.00;
 
@@ -242,7 +238,7 @@ app.post('/api/pagamentos/pix', async (req, res) => {
             description: 'Deposito de Saldo - Bicho777Bet',
             payment_method_id: 'pix',
             payer: {
-                email: email_usuario || 'comprador.teste@gmail.com',
+                email: 'cliente@bicho777bet.com', // E-mail fixo exigido apenas pela API do Mercado Pago
                 first_name: 'Cliente',
                 last_name: 'Usuario'
             },
@@ -333,7 +329,7 @@ app.get('/api/pagamentos/status/:id', async (req, res) => {
     }
 });
 
-// ROTA: Solicitar Saque Pix Real
+// ROTA: Solicitar Saque Pix
 app.post('/api/saque', async (req, res) => {
     const { usuarioId, tipoChave, chavePix, valor } = req.body;
     const userId = usuarioId || 1;
@@ -376,55 +372,11 @@ app.post('/api/saque', async (req, res) => {
         );
         const saqueId = saqueInsert.rows[0].id;
 
-        let disburmentId = null;
-        let transacaoAprovada = false;
-
-        try {
-            const mpPayout = await fetch('https://api.mercadopago.com/v1/disbursements', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${process.env.MERCADOPAGO_ACCESS_TOKEN}`
-                },
-                body: JSON.stringify({
-                    amount: valorSaque,
-                    collector_id: process.env.MERCADOPAGO_COLLECTOR_ID,
-                    description: `Saque Bicho777Bet #${saqueId}`,
-                    payment_method_id: 'pix',
-                    receiver: {
-                        identification: { type: tipoChave.toUpperCase(), number: chavePix }
-                    }
-                })
-            });
-
-            const payoutData = await mpPayout.json();
-
-            if (mpPayout.ok && payoutData.id) {
-                disburmentId = String(payoutData.id);
-                transacaoAprovada = true;
-            } else {
-                transacaoAprovada = true;
-                disburmentId = `PIX_MANUAL_${Date.now()}`;
-            }
-        } catch (gatewayErr) {
-            transacaoAprovada = true;
-            disburmentId = `PIX_REGISTRADO_${Date.now()}`;
-        }
-
-        if (transacaoAprovada) {
-            await dbClient.query(
-                'UPDATE saques SET status = $1, mp_disbursement_id = $2 WHERE id = $3',
-                ['concluido', disburmentId, saqueId]
-            );
-
-            await dbClient.query('COMMIT');
-            return res.status(200).json({ 
-                mensagem: 'Solicitação de saque processada com sucesso!',
-                saque_id: saqueId 
-            });
-        } else {
-            throw new Error('Transferência não autorizada pelo gateway.');
-        }
+        await dbClient.query('COMMIT');
+        return res.status(200).json({ 
+            mensagem: 'Solicitação de saque processada com sucesso!',
+            saque_id: saqueId 
+        });
 
     } catch (error) {
         await dbClient.query('ROLLBACK');
