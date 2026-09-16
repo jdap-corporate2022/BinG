@@ -65,10 +65,9 @@ const initDb = async () => {
                 mp_disbursement_id VARCHAR(100),
                 criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
-        `);
 
-        // Garante a existência da coluna is_admin em bancos já populados
-        await pool.query(`
+            -- MIGRAÇÕES DE COMPATIBILIDADE PARA BANCOS JÁ EXISTENTES
+            ALTER TABLE usuarios ALTER COLUMN email DROP NOT NULL;
             ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT FALSE;
         `);
 
@@ -83,7 +82,7 @@ const initDb = async () => {
             console.log("Usuário Administrador 'admin' criado com sucesso.");
         }
 
-        console.log("Banco de dados, tabelas e schema inicializados com sucesso.");
+        console.log("Banco de dados, tabelas e migrações executadas com sucesso.");
     } catch (err) {
         console.error("Erro ao inicializar banco de dados:", err);
     }
