@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#03120a">
+    <title>Solicitar Saque - Bicho777Bet</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background: #020d07 radial-gradient(circle at 50% 25%, #083b1d 0%, #03150b 50%, #010804 100%) no-repeat fixed;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            padding-bottom: 85px;
+            position: relative;
+            background: radial-gradient(ellipse at 50% 0%, rgba(0, 255, 100, 0.15) 0%, transparent 70%);
+        }
+
+        /* HEADER */
+        .header {
+            width: 100%;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            background: linear-gradient(180deg, #011409 0%, rgba(1, 20, 9, 0.8) 100%);
+            border-bottom: 1px solid rgba(0, 255, 120, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: #ffc200;
+            font-size: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 900;
+            color: #ffc200;
+            letter-spacing: -0.5px;
+        }
+
+        /* CONTENT */
+        .content {
+            padding: 16px;
+        }
+
+        /* SALDO CARD */
+        .balance-card {
+            background: linear-gradient(180deg, rgba(0, 31, 15, 0.95) 0%, rgba(0, 15, 7, 0.98) 100%);
+            border: 1px solid rgba(0, 255, 120, 0.25);
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .balance-label {
+            font-size: 11px;
+            color: #8da496;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .balance-value {
+            font-size: 28px;
+            font-weight: 900;
+            color: #ffc200;
+            margin-top: 4px;
+        }
+
+        /* FORMULARIO */
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 700;
+            color: #10e36b;
+            margin-bottom: 6px;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 12px 14px;
+            border-radius: 10px;
+            border: 1px solid rgba(0, 255, 120, 0.3);
+            background: #011f0d;
+            color: #fff;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .form-input:focus, .form-select:focus {
+            border-color: #ffc200;
+        }
+
+        .info-note {
+            font-size: 11px;
+            color: #8da496;
+            margin-top: 4px;
+        }
+
+        /* BOTÃO DE SAQUE */
+        .withdraw-button {
+            width: 100%;
+            height: 52px;
+            margin-top: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            border-radius: 12px;
+            border: 1px solid #fff2a3;
+            background: linear-gradient(180deg, #ffdb33 0%, #f3a800 60%, #c47f00 100%);
+            color: #050a06;
+            font-size: 16px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(243, 168, 0, 0.4);
+        }
+
+        .withdraw-button:active {
+            transform: scale(0.98);
+        }
+
+        /* BOTTOM NAV */
+        .bottom-navigation {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 60px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            background: linear-gradient(180deg, #011208 0%, #000a04 100%);
+            border-top: 1px solid rgba(0, 255, 120, 0.2);
+            z-index: 100;
+        }
+
+        .nav-item {
+            border: 0;
+            background: transparent;
+            color: #6e8578;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-icon {
+            font-size: 18px;
+        }
+
+        .nav-label {
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .nav-item.active {
+            color: #10e36b;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- HEADER -->
+        <header class="header">
+            <a href="perfil.html" class="back-button">❮ Voltar</a>
+            <div class="header-title">Solicitar Saque</div>
+            <div style="width: 50px;"></div>
+        </header>
+
+        <!-- CONTEÚDO -->
+        <main class="content">
+            <!-- EXIBIÇÃO DE SALDO DISPONÍVEL -->
+            <div class="balance-card">
+                <div class="balance-label">Saldo Disponível para Saque</div>
+                <div class="balance-value" id="availableBalance">R$ 0,00</div>
+            </div>
+
+            <!-- FORMULÁRIO DE SAQUE PIX -->
+            <form id="withdrawForm">
+                <div class="form-group">
+                    <label class="form-label" for="pixType">Tipo de Chave PIX</label>
+                    <select id="pixType" class="form-select" required>
+                        <option value="cpf">CPF</option>
+                        <option value="email">E-mail</option>
+                        <option value="phone">Telefone</option>
+                        <option value="random">Chave Aleatória (EVP)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="pixKey">Chave PIX</label>
+                    <input type="text" id="pixKey" class="form-input" placeholder="Informe sua chave PIX" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="withdrawAmount">Valor do Saque (R$)</label>
+                    <input type="number" id="withdrawAmount" class="form-input" placeholder="0,00" step="0.01" min="10" required>
+                    <div class="info-note">* Valor mínimo para saque: R$ 10,00</div>
+                </div>
+
+                <button type="submit" class="withdraw-button" id="btnSubmit">
+                    <span>🏦</span>
+                    <span>CONFIRMAR SAQUE</span>
+                </button>
+            </form>
+        </main>
+
+        <!-- NAVEGAÇÃO INFERIOR -->
+        <nav class="bottom-navigation">
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Início</span>
+            </a>
+            <a href="minhas-apostas.html" class="nav-item">
+                <span class="nav-icon">📋</span>
+                <span class="nav-label">Minhas Apostas</span>
+            </a>
+            <a href="resultados.html" class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Resultados</span>
+            </a>
+            <a href="perfil.html" class="nav-item active">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">Perfil</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        const API_URL = 'https://bing-j6vi.onrender.com';
+        let saldoAtual = 0;
+
+        // Busca o saldo real do usuário no backend
+        async function carregarSaldo() {
+            try {
+                const res = await fetch(`${API_URL}/api/usuario/1/saldo`);
+                const data = await res.json();
+                if (data.saldo !== undefined) {
+                    saldoAtual = data.saldo;
+                    document.getElementById('availableBalance').textContent = `R$ ${saldoAtual.toFixed(2).replace('.', ',')}`;
+                }
+            } catch (err) {
+                console.error('Erro ao buscar saldo:', err);
+            }
+        }
+
+        // Submissão do pedido de saque
+        document.getElementById('withdrawForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const pixType = document.getElementById('pixType').value;
+            const pixKey = document.getElementById('pixKey').value.trim();
+            const amount = parseFloat(document.getElementById('withdrawAmount').value);
+
+            if (!pixKey) {
+                alert('Por favor, informe a chave PIX.');
+                return;
+            }
+
+            if (isNaN(amount) || amount < 10) {
+                alert('O valor mínimo de saque é R$ 10,00.');
+                return;
+            }
+
+            if (amount > saldoAtual) {
+                alert('Saldo insuficiente para realizar este saque.');
+                return;
+            }
+
+            const btnSubmit = document.getElementById('btnSubmit');
+            btnSubmit.disabled = true;
+            btnSubmit.innerHTML = '<span>Processando...</span>';
+
+            try {
+                const response = await fetch(`${API_URL}/api/saque`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        usuarioId: 1,
+                        tipoChave: pixType,
+                        chavePix: pixKey,
+                        valor: amount
+                    })
+                });
+
+                const resData = await response.json();
+
+                if (response.ok) {
+                    alert('Solicitação de saque enviada com sucesso! O valor será transferido para sua conta PIX.');
+                    window.location.href = 'perfil.html';
+                } else {
+                    alert(resData.mensagem || 'Erro ao processar solicitação de saque.');
+                    btnSubmit.disabled = false;
+                    btnSubmit.innerHTML = '<span>🏦</span><span>CONFIRMAR SAQUE</span>';
+                }
+            } catch (err) {
+                console.error('Erro na solicitação de saque:', err);
+                alert('Erro ao conectar com o servidor. Tente novamente.');
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML = '<span>🏦</span><span>CONFIRMAR SAQUE</span>';
+            }
+        });
+
+        carregarSaldo();
+    </script>
+</body>
+</html>
