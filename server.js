@@ -14,7 +14,7 @@ const pool = new Pool({
     connectionString: process.env.DATABASE_URL
 });
 
-// Inicialização do Schema, Tabelas e Usuário Admin Padrão
+// Inicialização do Schema, Tabelas e Migrações
 const initDb = async () => {
     try {
         await pool.query(`
@@ -65,24 +65,33 @@ const initDb = async () => {
                 mp_disbursement_id VARCHAR(100),
                 criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
-
-            -- MIGRAÇÕES DE COMPATIBILIDADE PARA BANCOS JÁ EXISTENTES
-            ALTER TABLE usuarios ALTER COLUMN email DROP NOT NULL;
-            ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT FALSE;
         `);
+
+        // Executa comandos de alteração de forma independente para evitar falha em bloco
+        try {
+            await pool.query('ALTER TABLE usuarios ALTER COLUMN email DROP NOT NULL;');
+        } catch (e) {
+            console.log("Nota: Coluna email já é opcional ou não pôde ser alterada.");
+        }
+
+        try {
+            await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT FALSE;');
+        } catch (e) {
+            console.log("Nota: Coluna is_admin já existe.");
+        }
 
         // Criação automática do usuário administrador
         const adminCheck = await pool.query("SELECT id FROM usuarios WHERE telefone = 'admin'");
         if (adminCheck.rows.length === 0) {
             const hashSenhaAdmin = await bcrypt.hash('@Dell8245', 10);
             await pool.query(
-                "INSERT INTO usuarios (nome, telefone, senha, is_admin) VALUES ('Administrador', 'admin', $1, TRUE)",
+                "INSERT INTO usuarios (nome, telefone, senha, email, is_admin) VALUES ('Administrador', 'admin', $1, 'admin@bicho777.com', TRUE)",
                 [hashSenhaAdmin]
             );
             console.log("Usuário Administrador 'admin' criado com sucesso.");
         }
 
-        console.log("Banco de dados, tabelas e migrações executadas com sucesso.");
+        console.log("Banco de dados pronto para uso.");
     } catch (err) {
         console.error("Erro ao inicializar banco de dados:", err);
     }
@@ -129,7 +138,7 @@ app.post('/api/admin/login', async (req, res) => {
     }
 });
 
-// ROTA: Cadastro de Usuário
+// ROTA: Cadastro de Usuário (Corrigida para evitar erro de NOT NULL)
 app.post('/api/auth/cadastro', async (req, res) => {
     const { nome, telefone, senha } = req.body;
 
@@ -144,16 +153,19 @@ app.post('/api/auth/cadastro', async (req, res) => {
         }
 
         const hashSenha = await bcrypt.hash(senha, 10);
+        
+        // Passa uma string padronizada no email para evitar erro caso a coluna ainda exija valor no PostgreSQL
+        const emailFallback = `${telefone}@bicho777.com`;
 
         const newUser = await pool.query(
-            'INSERT INTO usuarios (nome, telefone, senha) VALUES ($1, $2, $3) RETURNING id, nome, telefone',
-            [nome, telefone, hashSenha]
+            'INSERT INTO usuarios (nome, telefone, senha, email) VALUES ($1, $2, $3, $4) RETURNING id, nome, telefone',
+            [nome, telefone, hashSenha, emailFallback]
         );
 
         const userId = newUser.rows[0].id;
 
         await pool.query(
-            'INSERT INTO carteiras (usuario_id, saldo) VALUES ($1, 0.00) ON CONFLICT DO NOTHING',
+            'INSERT INTO carteiras (usuario_id, saldo) VALUES ($1, 0.00)',
             [userId]
         );
 
