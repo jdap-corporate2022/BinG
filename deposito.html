@@ -107,7 +107,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 10px;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
         .val-btn {
@@ -139,7 +139,7 @@
             font-weight: 900;
             cursor: pointer;
             box-shadow: 0 4px 15px rgba(243, 168, 0, 0.4);
-            margin-top: auto;
+            margin-top: 10px;
         }
 
         /* Modal PIX */
@@ -197,7 +197,7 @@
 
         <div class="section-label">Digite o valor do depósito:</div>
         <div class="input-group">
-            <input type="number" id="depositAmount" placeholder="R$ 10,00" min="1" step="1" value="10">
+            <input type="number" id="depositAmount" placeholder="R$ 10,00" min="10" step="1" value="10">
         </div>
 
         <div class="section-label">Ou escolha um valor rápido:</div>
@@ -225,8 +225,8 @@
         document.getElementById('generatePixBtn').addEventListener('click', async () => {
             const inputVal = parseFloat(document.getElementById('depositAmount').value);
             
-            if (isNaN(inputVal) || inputVal < 1) {
-                alert('Informe um valor de no mínimo R$ 1,00.');
+            if (isNaN(inputVal) || inputVal < 10) {
+                alert('O valor mínimo para depósito é de R$ 10,00.');
                 return;
             }
 
