@@ -75,16 +75,16 @@ app.post('/api/pagamentos/pix', async (req, res) => {
 
     try {
         const body = {
-            transaction_amount: parseFloat(valor),
-            description: 'Depósito de Saldo - Bicho777Bet',
+            transaction_amount: Number(valor),
+            description: 'Deposito de Saldo - Bicho777Bet',
             payment_method_id: 'pix',
             payer: {
-                email: email_usuario || 'cliente@bicho777bet.com',
-                first_name: 'Usuario',
-                last_name: 'Bicho777',
+                email: email_usuario || 'comprador.teste@gmail.com',
+                first_name: 'Cliente',
+                last_name: 'Usuario',
                 identification: {
                     type: 'CPF',
-                    number: '19119119100' // CPF válido fictício exigido pela API em produção
+                    number: '85223307040' // CPF válido em produção sem caracteres especiais
                 }
             },
             notification_url: process.env.WEBHOOK_URL
@@ -104,7 +104,7 @@ app.post('/api/pagamentos/pix', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Erro detalhado do Mercado Pago:', error.cause || error);
+        console.error('Erro detalhado MP:', JSON.stringify(error.cause || error, null, 2));
         res.status(500).json({ error: 'Erro ao gerar cobrança PIX. Verifique os dados fornecidos.' });
     }
 });
