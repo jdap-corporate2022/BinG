@@ -119,13 +119,11 @@
             <span id="infoLimit">LIMITE: 0</span>
         </div>
 
-        <!-- CONTAINER GRUPOS -->
         <div id="groupsContainer" class="hidden">
             <h3 style="color:#10e36b; font-size: 12px; margin-bottom:8px;">SELECIONE O GRUPO:</h3>
             <div class="grid-numbers" id="gridGroups"></div>
         </div>
 
-        <!-- CONTAINER DEZENAS -->
         <div id="dezenasContainer" class="hidden">
             <h3 style="color:#10e36b; font-size: 12px; margin-bottom:8px;">SELECIONE AS DEZENAS:</h3>
             <div class="grid-numbers" id="gridDezenas"></div>
@@ -138,16 +136,16 @@
     const API_URL = 'https://bing-j6vi.onrender.com';
     const urlParams = new URLSearchParams(window.location.search);
     const betType = urlParams.get('type');
-    const betVal = urlParams.get('val');
+    const rawVal = parseFloat(urlParams.get('val'));
+    const betVal = isNaN(rawVal) || rawVal < 1 ? 2.00 : rawVal; 
     const maxSelections = parseInt(urlParams.get('max')) || 1;
 
     let selectedItems = [];
 
     document.getElementById('infoType').textContent = `TIPO: ${betType === 'grupo' ? 'GRUPO' : 'DEZENA'}`;
-    document.getElementById('infoValue').textContent = `VALOR: R$ ${parseFloat(betVal).toFixed(2)}`;
+    document.getElementById('infoValue').textContent = `VALOR: R$ ${betVal.toFixed(2)}`;
     document.getElementById('infoLimit').textContent = `LIMITE: ${maxSelections}`;
 
-    // Renderiza os botões de seleção de Grupos ou Dezenas
     if (betType === 'grupo') {
         const container = document.getElementById('groupsContainer');
         container.classList.remove('hidden');
@@ -189,7 +187,6 @@
         }
     }
 
-    // Clique em FINALIZAR APOSTA -> Gera PIX no Mercado Pago via Render
     document.getElementById('confirmBet').addEventListener('click', async () => {
         if (selectedItems.length === 0) {
             alert('Selecione ao menos um palpite.');
@@ -205,30 +202,29 @@
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
-                    usuario_id: 1, // ID do usuário logado
-                    valor: parseFloat(betVal),
-                    email_usuario: 'cliente@bicho777bet.com'
+                    usuario_id: 1,
+                    valor: betVal,
+                    email_usuario: 'comprador.teste@gmail.com'
                 })
             });
 
             const data = await response.json();
 
-            if (response.ok) {
+            if (response.ok && data.qr_code_base64) {
                 exibirModalPix(data.qr_code_base64, data.qr_code, data.payment_id);
                 monitorarPagamento(data.payment_id);
             } else {
-                alert(data.error || 'Erro ao gerar pagamento PIX.');
+                alert(data.error || 'Erro ao gerar PIX. Verifique a chave Access Token no Render.');
             }
         } catch (error) {
             console.error('Erro na requisição:', error);
-            alert('Erro ao se conectar com o servidor.');
+            alert('Erro de conexão com o servidor de pagamento.');
         } finally {
             btnConfirmar.disabled = false;
             btnConfirmar.textContent = 'FINALIZAR APOSTA ❯';
         }
     });
 
-    // Função para criar/exibir o Modal com QRCode e Copia e Cola
     function exibirModalPix(qrBase64, qrCode, paymentId) {
         let modal = document.getElementById('pixModal');
         if (!modal) {
@@ -259,7 +255,7 @@
         document.getElementById('copyBtn').addEventListener('click', () => {
             const copyText = document.getElementById('copiaColaText');
             copyText.select();
-            document.execCommand('copy');
+            navigator.clipboard.writeText(qrCode);
             alert('Código PIX copiado!');
         });
 
@@ -270,7 +266,6 @@
         modal.style.display = 'flex';
     }
 
-    // Consulta o servidor a cada 3 segundos para confirmar a aprovação do PIX
     function monitorarPagamento(paymentId) {
         const interval = setInterval(async () => {
             try {
@@ -279,7 +274,7 @@
 
                 if (data.status === 'approved') {
                     clearInterval(interval);
-                    alert('Pagamento PIX confirmado com sucesso! Sua aposta foi realizada.');
+                    alert('Pagamento PIX confirmado com sucesso!');
                     window.location.href = 'index.html';
                 }
             } catch (err) {
@@ -287,6 +282,6 @@
             }
         }, 3000);
     }
-</script>
+    </script>
 </body>
 </html>
