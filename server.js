@@ -8,12 +8,12 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-// Conexão com o Banco PostgreSQL
+// Conexão PostgreSQL
 const pool = new Pool({
     connectionString: process.env.DATABASE_URL
 });
 
-// Criação automática do Schema do Banco de Dados
+// Inicialização do Schema
 const initDb = async () => {
     try {
         await pool.query(`
@@ -79,7 +79,13 @@ app.post('/api/pagamentos/pix', async (req, res) => {
             description: 'Depósito de Saldo - Bicho777Bet',
             payment_method_id: 'pix',
             payer: {
-                email: email_usuario || 'usuario@email.com',
+                email: email_usuario || 'cliente@bicho777bet.com',
+                first_name: 'Usuario',
+                last_name: 'Bicho777',
+                identification: {
+                    type: 'CPF',
+                    number: '19119119100' // CPF válido fictício exigido pela API em produção
+                }
             },
             notification_url: process.env.WEBHOOK_URL
         };
@@ -88,7 +94,7 @@ app.post('/api/pagamentos/pix', async (req, res) => {
 
         await pool.query(
             'INSERT INTO pagamentos_pix (usuario_id, mp_payment_id, valor, status) VALUES ($1, $2, $3, $4)',
-            [usuario_id, mpResponse.id, valor, mpResponse.status]
+            [usuario_id || 1, mpResponse.id, valor, mpResponse.status]
         );
 
         res.status(200).json({
@@ -98,12 +104,12 @@ app.post('/api/pagamentos/pix', async (req, res) => {
         });
 
     } catch (error) {
-        console.error('Erro ao gerar PIX:', error);
-        res.status(500).json({ error: 'Erro ao gerar cobrança PIX.' });
+        console.error('Erro detalhado do Mercado Pago:', error.cause || error);
+        res.status(500).json({ error: 'Erro ao gerar cobrança PIX. Verifique os dados fornecidos.' });
     }
 });
 
-// ROTA 2: Webhook Mercado Pago
+// ROTA 2: Webhook
 app.post('/api/webhooks/mercadopago', async (req, res) => {
     const { action, data } = req.body;
     res.status(200).send('OK');
@@ -153,7 +159,7 @@ app.post('/api/webhooks/mercadopago', async (req, res) => {
     }
 });
 
-// ROTA 3: Verificação de Status do Pagamento
+// ROTA 3: Verificação de Status
 app.get('/api/pagamentos/status/:id', async (req, res) => {
     const { id } = req.params;
     try {
