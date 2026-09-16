@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#03120a">
+    <title>Minhas Apostas - Bicho777Bet</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background: #020d07 radial-gradient(circle at 50% 25%, #083b1d 0%, #03150b 50%, #010804 100%) no-repeat fixed;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            padding: 12px;
+            padding-bottom: 80px;
+            background: radial-gradient(ellipse at 50% 0%, rgba(0, 255, 100, 0.15) 0%, transparent 70%);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 50px;
+            border-bottom: 1px solid rgba(0, 255, 120, 0.15);
+            margin-bottom: 16px;
+        }
+
+        .back-button {
+            color: #ffc200;
+            font-size: 24px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .header-title {
+            color: #ffc200;
+            font-weight: 900;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .balance-box {
+            background: linear-gradient(180deg, #001f0d 0%, #001207 100%);
+            border: 1px solid rgba(255, 194, 0, 0.4);
+            border-radius: 8px;
+            padding: 4px 10px;
+            text-align: center;
+        }
+
+        .balance-label {
+            display: block;
+            font-size: 8px;
+            color: #8da496;
+            font-weight: 700;
+        }
+
+        .balance-box strong {
+            font-size: 13px;
+            color: #fff;
+            font-weight: 800;
+        }
+
+        .bets-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .bet-card {
+            background: rgba(0, 20, 10, 0.7);
+            border: 1px solid rgba(16, 227, 107, 0.3);
+            border-radius: 10px;
+            padding: 12px 14px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+        }
+
+        .bet-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.1);
+            padding-bottom: 6px;
+        }
+
+        .bet-type {
+            font-size: 14px;
+            font-weight: 900;
+            color: #ffc200;
+            text-transform: uppercase;
+        }
+
+        .bet-date {
+            font-size: 11px;
+            color: #8da496;
+        }
+
+        .bet-body {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .bet-palpites {
+            font-size: 13px;
+            color: #fff;
+        }
+
+        .bet-palpites strong {
+            color: #10e36b;
+        }
+
+        .bet-value {
+            font-size: 14px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .bet-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 4px;
+        }
+
+        .status-badge {
+            font-size: 10px;
+            font-weight: 800;
+            padding: 3px 8px;
+            border-radius: 12px;
+            text-transform: uppercase;
+        }
+
+        .status-pending {
+            background: rgba(255, 194, 0, 0.15);
+            color: #ffc200;
+            border: 1px solid #ffc200;
+        }
+
+        .status-win {
+            background: rgba(16, 227, 107, 0.15);
+            color: #10e36b;
+            border: 1px solid #10e36b;
+        }
+
+        .status-loss {
+            background: rgba(255, 65, 54, 0.15);
+            color: #ff4136;
+            border: 1px solid #ff4136;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #8da496;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+            opacity: 0.6;
+        }
+
+        /* Navbar Inferior */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 60px;
+            background: #020d07;
+            border-top: 1px solid rgba(0, 255, 120, 0.2);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #8da496;
+            text-decoration: none;
+            font-size: 10px;
+            font-weight: 700;
+        }
+
+        .nav-item.active {
+            color: #ffc200;
+        }
+
+        .nav-icon {
+            font-size: 20px;
+            margin-bottom: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <a href="index.html" class="back-button">❮</a>
+            <span class="header-title">MINHAS APOSTAS</span>
+            <div class="balance-box">
+                <span class="balance-label">SALDO</span>
+                <strong id="userBalance">R$ 0,00</strong>
+            </div>
+        </header>
+
+        <div id="betsList" class="bets-list">
+            <div class="empty-state">
+                <div class="empty-icon">⏳</div>
+                <p>Carregando suas apostas...</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navegação Inferior -->
+    <nav class="bottom-nav">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            INÍCIO
+        </a>
+        <a href="minhas-apostas.html" class="nav-item active">
+            <span class="nav-icon">📋</span>
+            APOSTAS
+        </a>
+        <a href="deposito.html" class="nav-item">
+            <span class="nav-icon">💳</span>
+            DEPOSITAR
+        </a>
+    </nav>
+
+    <script>
+    const API_URL = 'https://bing-j6vi.onrender.com';
+
+    async function carregarSaldo() {
+        try {
+            const res = await fetch(`${API_URL}/api/usuario/1/saldo`);
+            const data = await res.json();
+            if (data.saldo !== undefined) {
+                document.getElementById('userBalance').textContent = `R$ ${data.saldo.toFixed(2).replace('.', ',')}`;
+            }
+        } catch (err) {
+            console.error('Erro ao carregar saldo:', err);
+        }
+    }
+
+    async function carregarApostas() {
+        const container = document.getElementById('betsList');
+        try {
+            const res = await fetch(`${API_URL}/api/apostas/1`);
+            const apostas = await res.json();
+
+            if (!Array.isArray(apostas) || apostas.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🎟️</div>
+                        <p style="font-size: 14px; font-weight: bold; color: #fff; margin-bottom: 6px;">Nenhuma aposta encontrada</p>
+                        <p style="font-size: 12px;">Faça a sua primeira aposta para acompanhar o status aqui!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = apostas.map(aposta => {
+                const dataFormatada = new Date(aposta.criado_em).toLocaleString('pt-BR', {
+                    day: '2-digit', month: '2-digit', year: '2-digit',
+                    hour: '2-digit', minute: '2-digit'
+                });
+
+                let statusClass = 'status-pending';
+                let statusText = 'AGUARDANDO SORTEIO';
+
+                if (aposta.status === 'ganhou') {
+                    statusClass = 'status-win';
+                    statusText = 'GANHOU 🎉';
+                } else if (aposta.status === 'perdeu') {
+                    statusClass = 'status-loss';
+                    statusText = 'NÃO PREMIADO';
+                }
+
+                const palpitesStr = Array.isArray(aposta.palpites) 
+                    ? aposta.palpites.join(', ') 
+                    : JSON.parse(aposta.palpites || '[]').join(', ');
+
+                return `
+                    <div class="bet-card">
+                        <div class="bet-header">
+                            <span class="bet-type">${aposta.modalidade}</span>
+                            <span class="bet-date">${dataFormatada}</span>
+                        </div>
+                        <div class="bet-body">
+                            <span class="bet-palpites">Palpite(s): <strong>${palpitesStr}</strong></span>
+                            <span class="bet-value">R$ ${parseFloat(aposta.valor).toFixed(2).replace('.', ',')}</span>
+                        </div>
+                        <div class="bet-footer">
+                            <span class="status-badge ${statusClass}">${statusText}</span>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+        } catch (err) {
+            console.error('Erro ao carregar apostas:', err);
+            container.innerHTML = `
+                <div class="empty-state">
+                    <div class="empty-icon">⚠️</div>
+                    <p style="color: #ffc200;">Erro ao carregar seu histórico de apostas.</p>
+                </div>
+            `;
+        }
+    }
+
+    carregarSaldo();
+    carregarApostas();
+    </script>
+</body>
+</html>
