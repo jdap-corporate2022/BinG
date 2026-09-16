@@ -17,11 +17,12 @@ const pool = new Pool({
 // Inicialização e Sincronização do Schema
 const initDb = async () => {
     try {
-        // 1. Criação Inicial das Tabelas
+        // 1. Criação Inicial das Tabelas (caso não existam)
         await pool.query(`
             CREATE TABLE IF NOT EXISTS usuarios (
                 id SERIAL PRIMARY KEY,
                 nome VARCHAR(100) NOT NULL,
+                telefone VARCHAR(50) UNIQUE,
                 senha VARCHAR(255) NOT NULL,
                 is_admin BOOLEAN DEFAULT FALSE,
                 criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -66,27 +67,32 @@ const initDb = async () => {
             );
         `);
 
-        // 2. Garante que a coluna 'telefone' exista caso a tabela antiga não a possua
+        // 2. Garante migração de colunas para tabelas já existentes no Render
         try {
             await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS telefone VARCHAR(50) UNIQUE;');
         } catch (e) {
-            console.log("Nota: Coluna 'telefone' já presente.");
+            console.log("Nota: Ajuste em 'telefone'.");
         }
 
-        // 3. Remove a restrição NOT NULL ou apaga a coluna 'email' antiga
         try {
-            await pool.query('ALTER TABLE usuarios DROP COLUMN IF EXISTS email;');
+            await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS senha VARCHAR(255);');
         } catch (e) {
-            console.log("Nota: Coluna 'email' já removida.");
+            console.log("Nota: Ajuste em 'senha'.");
         }
 
         try {
             await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT FALSE;');
         } catch (e) {
-            console.log("Nota: Coluna 'is_admin' já presente.");
+            console.log("Nota: Ajuste em 'is_admin'.");
         }
 
-        // 4. Criação do Usuário Administrador Padrão
+        try {
+            await pool.query('ALTER TABLE usuarios DROP COLUMN IF EXISTS email;');
+        } catch (e) {
+            console.log("Nota: Removendo 'email' antigo se existir.");
+        }
+
+        // 3. Criação do Usuário Administrador Padrão
         const adminCheck = await pool.query("SELECT id FROM usuarios WHERE telefone = 'admin'");
         if (adminCheck.rows.length === 0) {
             const hashSenhaAdmin = await bcrypt.hash('@Dell8245', 10);
@@ -144,7 +150,7 @@ app.post('/api/admin/login', async (req, res) => {
     }
 });
 
-// ROTA: Cadastro de Usuário (Retornando detalhes do erro em caso de falha)
+// ROTA: Cadastro de Usuário
 app.post('/api/auth/cadastro', async (req, res) => {
     const { nome, telefone, senha } = req.body;
 
