@@ -335,7 +335,7 @@ app.post('/api/saque', async (req, res) => {
     const userId = usuarioId || 1;
     const valorSaque = parseFloat(valor);
 
-    if (!chavePix || isNaN(valorSaque) || valorSaque < 10) {
+    if (!chavePix || isNaN(valorSaque) || valorSaque < 20) {
         return res.status(400).json({ mensagem: 'O valor mínimo para saque é R$ 10,00 e a chave Pix é obrigatória.' });
     }
 
