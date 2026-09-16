@@ -133,6 +133,10 @@
             font-weight: 400;
             cursor: pointer;
             box-shadow: 0 0 10px rgba(18, 217, 106, 0.4);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         /* CONTENT */
@@ -158,6 +162,7 @@
             justify-content: center;
             cursor: pointer;
             text-align: center;
+            text-decoration: none;
         }
 
         .card-symbol {
@@ -386,6 +391,7 @@
             justify-content: center;
             gap: 2px;
             cursor: pointer;
+            text-decoration: none;
         }
 
         .nav-icon {
@@ -461,6 +467,8 @@
             text-align: left;
             font-weight: 700;
             cursor: pointer;
+            text-decoration: none;
+            display: block;
         }
 
         /* MODAL GENÉRICO */
@@ -544,7 +552,7 @@
                     <span class="balance-label">SALDO</span>
                     <strong id="balance">R$ 0,00</strong>
                 </div>
-                <button class="add-button" id="addButton">+</button>
+                <a href="deposito.html" class="add-button">+</a>
             </div>
         </header>
 
@@ -619,19 +627,19 @@
 
         <!-- NAVEGAÇÃO INFERIOR -->
         <nav class="bottom-navigation">
-            <button class="nav-item active" data-page="inicio">
+            <a href="index.html" class="nav-item active">
                 <span class="nav-icon">🏠</span>
                 <span class="nav-label">Início</span>
-            </button>
-            <button class="nav-item" data-page="apostas">
+            </a>
+            <a href="minhas-apostas.html" class="nav-item">
                 <span class="nav-icon">📋</span>
                 <span class="nav-label">Minhas Apostas</span>
-            </button>
-            <button class="nav-item" data-page="resultados">
+            </a>
+            <button class="nav-item" id="navResultados">
                 <span class="nav-icon">📊</span>
                 <span class="nav-label">Resultados</span>
             </button>
-            <button class="nav-item" data-page="perfil">
+            <button class="nav-item" id="navPerfil">
                 <span class="nav-icon">👤</span>
                 <span class="nav-label">Perfil</span>
             </button>
@@ -645,11 +653,11 @@
             <strong>Bicho777Bet</strong>
             <button id="closeMenu">&times;</button>
         </div>
-        <button class="side-option">🏠 &nbsp; Início</button>
-        <button class="side-option">🎟️ &nbsp; Minhas Apostas</button>
-        <button class="side-option">🏆 &nbsp; Resultados</button>
-        <button class="side-option">👤 &nbsp; Perfil</button>
-        <button class="side-option">❓ &nbsp; Como Jogar</button>
+        <a href="index.html" class="side-option">🏠 &nbsp; Início</a>
+        <a href="minhas-apostas.html" class="side-option">🎟️ &nbsp; Minhas Apostas</a>
+        <button class="side-option" id="sideResultados">🏆 &nbsp; Resultados</button>
+        <button class="side-option" id="sidePerfil">👤 &nbsp; Perfil</button>
+        <button class="side-option" id="sideComoJogar">❓ &nbsp; Como Jogar</button>
     </aside>
 
     <!-- MODAL INFORMATIVO GENÉRICO -->
@@ -717,7 +725,7 @@
         modalAction.addEventListener("click", closeModal);
         modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
 
-        // Ações dos outros botões
+        // Ações dos botões
         document.getElementById("resultButton").addEventListener("click", () => {
             showModal("Último Sorteio", "Confira o resultado do último sorteio.");
         });
@@ -726,26 +734,27 @@
             showModal("Como Jogar?", "Escolha seu grupo ou dezena, informe o valor e confirme a aposta.");
         });
 
-        document.getElementById("addButton").addEventListener("click", () => {
-            window.location.href = "deposito.html";
+        document.getElementById("navResultados").addEventListener("click", () => {
+            showModal("Resultados", "Todos os resultados dos sorteios.");
         });
 
-        const navItems = document.querySelectorAll(".nav-item");
-        navItems.forEach(item => {
-            item.addEventListener("click", function() {
-                navItems.forEach(n => n.classList.remove("active"));
-                this.classList.add("active");
-
-                const page = this.dataset.page;
-                if (page === "inicio") window.scrollTo({ top: 0, behavior: "smooth" });
-                if (page === "apostas") showModal("Minhas Apostas", "Histórico de apostas realizadas.");
-                if (page === "resultados") showModal("Resultados", "Todos os resultados dos sorteios.");
-                if (page === "perfil") showModal("Perfil", "Gerenciamento da sua conta.");
-            });
+        document.getElementById("navPerfil").addEventListener("click", () => {
+            showModal("Perfil", "Gerenciamento da sua conta.");
         });
 
-        document.querySelectorAll(".side-option").forEach(option => {
-            option.addEventListener("click", () => toggleMenu(false));
+        document.getElementById("sideResultados").addEventListener("click", () => {
+            toggleMenu(false);
+            showModal("Resultados", "Todos os resultados dos sorteios.");
+        });
+
+        document.getElementById("sidePerfil").addEventListener("click", () => {
+            toggleMenu(false);
+            showModal("Perfil", "Gerenciamento da sua conta.");
+        });
+
+        document.getElementById("sideComoJogar").addEventListener("click", () => {
+            toggleMenu(false);
+            showModal("Como Jogar?", "Escolha seu grupo ou dezena, informe o valor e confirme a aposta.");
         });
     </script>
 </body>
