@@ -13,13 +13,59 @@ const pool = new Pool({
     connectionString: process.env.DATABASE_URL
 });
 
-// Configuração da SDK do Mercado Pago
+// Criação automática do Schema do Banco de Dados
+const initDb = async () => {
+    try {
+        await pool.query(`
+            CREATE TABLE IF NOT EXISTS usuarios (
+                id SERIAL PRIMARY KEY,
+                nome VARCHAR(100) NOT NULL,
+                email VARCHAR(100) UNIQUE NOT NULL,
+                criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+
+            CREATE TABLE IF NOT EXISTS carteiras (
+                id SERIAL PRIMARY KEY,
+                usuario_id INT REFERENCES usuarios(id) ON DELETE CASCADE,
+                saldo DECIMAL(10, 2) NOT NULL DEFAULT 0.00,
+                atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+
+            CREATE TABLE IF NOT EXISTS apostas (
+                id SERIAL PRIMARY KEY,
+                usuario_id INT REFERENCES usuarios(id),
+                tipo_aposta VARCHAR(20) NOT NULL,
+                valor DECIMAL(10, 2) NOT NULL,
+                palpites JSONB NOT NULL,
+                status VARCHAR(20) DEFAULT 'pendente',
+                criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+
+            CREATE TABLE IF NOT EXISTS pagamentos_pix (
+                id SERIAL PRIMARY KEY,
+                usuario_id INT REFERENCES usuarios(id),
+                mp_payment_id BIGINT UNIQUE NOT NULL,
+                valor DECIMAL(10, 2) NOT NULL,
+                status VARCHAR(30) NOT NULL,
+                criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            );
+        `);
+        console.log("Banco de dados pronto e tabelas verificadas.");
+    } catch (err) {
+        console.error("Erro ao inicializar banco de dados:", err);
+    }
+};
+
+initDb();
+
+// Configuração SDK Mercado Pago
 const client = new MercadoPagoConfig({ 
     accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN 
 });
 const payment = new Payment(client);
 
-// ROTA 1: Gerar PIX para Depósito
+// ROTA 1: Gerar PIX
 app.post('/api/pagamentos/pix', async (req, res) => {
     const { usuario_id, valor, email_usuario } = req.body;
 
@@ -57,7 +103,7 @@ app.post('/api/pagamentos/pix', async (req, res) => {
     }
 });
 
-// ROTA 2: Webhook (Recebe notificação do Mercado Pago quando o PIX é pago)
+// ROTA 2: Webhook Mercado Pago
 app.post('/api/webhooks/mercadopago', async (req, res) => {
     const { action, data } = req.body;
     res.status(200).send('OK');
@@ -67,9 +113,10 @@ app.post('/api/webhooks/mercadopago', async (req, res) => {
 
         try {
             const paymentInfo = await payment.get({ id: paymentId });
-            
+
             if (paymentInfo.status === 'approved') {
                 const dbClient = await pool.connect();
+
                 try {
                     await dbClient.query('BEGIN');
 
@@ -106,7 +153,7 @@ app.post('/api/webhooks/mercadopago', async (req, res) => {
     }
 });
 
-// ROTA 3: Verificação de Status pelo Front-end
+// ROTA 3: Verificação de Status do Pagamento
 app.get('/api/pagamentos/status/:id', async (req, res) => {
     const { id } = req.params;
     try {
