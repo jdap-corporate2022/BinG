@@ -48,6 +48,28 @@
             font-weight: bold;
         }
 
+        .balance-box {
+            background: linear-gradient(180deg, #001f0d 0%, #001207 100%);
+            border: 1px solid rgba(255, 194, 0, 0.4);
+            border-radius: 8px;
+            padding: 4px 10px;
+            text-align: center;
+        }
+
+        .balance-label {
+            display: block;
+            font-size: 8px;
+            color: #8da496;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .balance-box strong {
+            font-size: 13px;
+            color: #fff;
+            font-weight: 800;
+        }
+
         .info-card {
             background: rgba(0, 0, 0, 0.6);
             border: 1px solid #ffc200;
@@ -104,7 +126,7 @@
             display: none;
         }
 
-        /* Estilos do Modal de PIX / Sucesso */
+        /* Modal de Sucesso */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -132,18 +154,6 @@
             transition: all 0.3s ease;
         }
 
-        .timer-badge {
-            display: inline-block;
-            background: rgba(255, 194, 0, 0.15);
-            color: #ffc200;
-            border: 1px solid #ffc200;
-            border-radius: 20px;
-            padding: 4px 12px;
-            font-size: 12px;
-            font-weight: bold;
-            margin-bottom: 12px;
-        }
-
         .success-icon {
             font-size: 50px;
             color: #10e36b;
@@ -163,7 +173,10 @@
         <header class="header">
             <a href="valor.html" class="back-button">❮</a>
             <span style="color:#ffc200; font-weight:900;">ESCOLHA SEUS PALPITES</span>
-            <div></div>
+            <div class="balance-box">
+                <span class="balance-label">SALDO</span>
+                <strong id="userBalance">R$ 0,00</strong>
+            </div>
         </header>
 
         <div class="info-card">
@@ -188,17 +201,30 @@
     <script>
     const API_URL = 'https://bing-j6vi.onrender.com';
     const urlParams = new URLSearchParams(window.location.search);
-    const betType = urlParams.get('type');
+    const betType = urlParams.get('type') || 'grupo';
     const rawVal = parseFloat(urlParams.get('val'));
     const betVal = isNaN(rawVal) || rawVal < 1 ? 2.00 : rawVal; 
     const maxSelections = parseInt(urlParams.get('max')) || 1;
 
     let selectedItems = [];
-    let timerInterval = null;
-    let statusInterval = null;
+    let saldoAtual = 0;
+
+    // Busca o saldo do usuário no backend
+    async function carregarSaldo() {
+        try {
+            const res = await fetch(`${API_URL}/api/usuario/1/saldo`);
+            const data = await res.json();
+            if (data.saldo !== undefined) {
+                saldoAtual = data.saldo;
+                document.getElementById('userBalance').textContent = `R$ ${saldoAtual.toFixed(2).replace('.', ',')}`;
+            }
+        } catch (err) {
+            console.error('Erro ao carregar saldo:', err);
+        }
+    }
 
     document.getElementById('infoType').textContent = `TIPO: ${betType === 'grupo' ? 'GRUPO' : 'DEZENA'}`;
-    document.getElementById('infoValue').textContent = `VALOR: R$ ${betVal.toFixed(2)}`;
+    document.getElementById('infoValue').textContent = `VALOR: R$ ${betVal.toFixed(2).replace('.', ',')}`;
     document.getElementById('infoLimit').textContent = `LIMITE: ${maxSelections}`;
 
     if (betType === 'grupo') {
@@ -210,7 +236,7 @@
             const btn = document.createElement('button');
             btn.className = 'bet-num-btn';
             btn.textContent = i;
-            btn.addEventListener('click', () => handleSelect(btn, i));
+            btn.addEventListener('click', () => handleSelect(btn, i.toString().padStart(2, '0')));
             grid.appendChild(btn);
         }
     } else {
@@ -248,142 +274,73 @@
             return;
         }
 
+        // Validação de saldo da carteira
+        if (saldoAtual < betVal) {
+            if (confirm('Saldo insuficiente para realizar esta aposta! Deseja fazer um depósito via PIX agora?')) {
+                window.location.href = 'deposito.html';
+            }
+            return;
+        }
+
         const btnConfirmar = document.getElementById('confirmBet');
         btnConfirmar.disabled = true;
-        btnConfirmar.textContent = 'GERANDO PIX...';
+        btnConfirmar.textContent = 'REGISTRANDO...';
 
         try {
-            const response = await fetch(`${API_URL}/api/pagamentos/pix`, {
+            const response = await fetch(`${API_URL}/api/apostas`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     usuario_id: 1,
-                    valor: betVal,
-                    email_usuario: 'comprador.teste@gmail.com'
+                    modalidade: betType === 'grupo' ? 'Grupo' : 'Dezena',
+                    palpites: selectedItems,
+                    valor: betVal
                 })
             });
 
             const data = await response.json();
 
-            if (response.ok && data.qr_code_base64) {
-                exibirModalPix(data.qr_code_base64, data.qr_code, data.payment_id);
-                iniciarTimerPix(15 * 60); // 15 minutos
-                monitorarPagamento(data.payment_id);
+            if (response.ok) {
+                exibirSucesso();
             } else {
-                alert(data.error || 'Erro ao gerar PIX.');
+                alert(data.error || 'Erro ao registrar aposta.');
+                btnConfirmar.disabled = false;
+                btnConfirmar.textContent = 'FINALIZAR APOSTA ❯';
             }
         } catch (error) {
             console.error('Erro na requisição:', error);
             alert('Erro de conexão com o servidor.');
-        } finally {
             btnConfirmar.disabled = false;
             btnConfirmar.textContent = 'FINALIZAR APOSTA ❯';
         }
     });
 
-    function exibirModalPix(qrBase64, qrCode, paymentId) {
-        let modal = document.getElementById('pixModal');
+    function exibirSucesso() {
+        let modal = document.getElementById('successModal');
         if (!modal) {
             modal = document.createElement('div');
-            modal.id = 'pixModal';
+            modal.id = 'successModal';
             modal.className = 'modal-overlay';
             document.body.appendChild(modal);
         }
 
         modal.innerHTML = `
-            <div class="modal-card" id="modalCard">
-                <div class="timer-badge">⏳ PIX expira em: <span id="pixTimer">15:00</span></div>
-                <h3 style="color: #ffc200; margin-bottom: 8px;">PAGAMENTO PIX</h3>
-                <p style="font-size: 12px; margin-bottom: 12px; color: #ccc;">Escaneie o QR Code ou copie o código abaixo:</p>
-                
-                <img src="data:image/png;base64,${qrBase64}" alt="QR Code PIX" style="width: 170px; height: 170px; margin-bottom: 12px; border-radius: 8px; border: 2px solid #ffc200;"/>
-                
-                <textarea id="copiaColaText" readonly style="width: 100%; height: 50px; background: #010804; color: #10e36b; border: 1px solid #10e36b; border-radius: 6px; padding: 6px; font-size: 10px; margin-bottom: 12px; resize: none;">${qrCode}</textarea>
-                
-                <button id="copyBtn" style="width: 100%; height: 40px; background: #10e36b; color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 8px;">COPIAR CÓDIGO PIX</button>
-                <button id="closeModalBtn" style="width: 100%; height: 35px; background: transparent; color: #ff5555; border: 1px solid #ff5555; border-radius: 8px; font-size: 12px; cursor: pointer;">CANCELAR</button>
+            <div class="modal-card">
+                <div class="success-icon">✔</div>
+                <h2 style="color: #10e36b; margin-bottom: 8px;">APOSTA REGISTRADA!</h2>
+                <p style="font-size: 14px; color: #fff; margin-bottom: 16px;">Sua aposta foi confirmada e o valor descontado do seu saldo.</p>
+                <p style="font-size: 12px; color: #aaa;">Redirecionando para a tela inicial...</p>
             </div>
         `;
 
-        document.getElementById('copyBtn').addEventListener('click', () => {
-            const copyText = document.getElementById('copiaColaText');
-            copyText.select();
-            if (navigator.clipboard) {
-                navigator.clipboard.writeText(qrCode);
-            }
-            alert('Código PIX copiado!');
-        });
-
-        document.getElementById('closeModalBtn').addEventListener('click', fecharModal);
-
         modal.style.display = 'flex';
-    }
-
-    function iniciarTimerPix(duracaoSegundos) {
-        clearInterval(timerInterval);
-        let tempoRestante = duracaoSegundos;
-
-        timerInterval = setInterval(() => {
-            const min = Math.floor(tempoRestante / 60).toString().padStart(2, '0');
-            const seg = (tempoRestante % 60).toString().padStart(2, '0');
-
-            const timerEl = document.getElementById('pixTimer');
-            if (timerEl) {
-                timerEl.textContent = `${min}:${seg}`;
-            }
-
-            if (--tempoRestante < 0) {
-                clearInterval(timerInterval);
-                clearInterval(statusInterval);
-                alert('O tempo para pagamento do PIX expirou.');
-                fecharModal();
-            }
-        }, 1000);
-    }
-
-    function fecharModal() {
-        clearInterval(timerInterval);
-        clearInterval(statusInterval);
-        const modal = document.getElementById('pixModal');
-        if (modal) modal.style.display = 'none';
-    }
-
-    function monitorarPagamento(paymentId) {
-        clearInterval(statusInterval);
-        statusInterval = setInterval(async () => {
-            try {
-                const res = await fetch(`${API_URL}/api/pagamentos/status/${paymentId}`);
-                const data = await res.json();
-
-                if (data.status === 'approved') {
-                    clearInterval(statusInterval);
-                    clearInterval(timerInterval);
-                    exibirSucesso();
-                }
-            } catch (err) {
-                console.error('Erro ao verificar status:', err);
-            }
-        }, 3000);
-    }
-
-    function exibirSucesso() {
-        const modalCard = document.getElementById('modalCard');
-        if (!modalCard) return;
-
-        modalCard.style.borderColor = '#10e36b';
-        modalCard.style.boxShadow = '0 0 30px rgba(16, 227, 107, 0.6)';
-
-        modalCard.innerHTML = `
-            <div class="success-icon">✔</div>
-            <h2 style="color: #10e36b; margin-bottom: 8px;">PAGAMENTO CONFIRMADO!</h2>
-            <p style="font-size: 14px; color: #fff; margin-bottom: 16px;">Sua aposta foi registrada com sucesso.</p>
-            <p style="font-size: 12px; color: #aaa;">Redirecionando para a tela inicial...</p>
-        `;
 
         setTimeout(() => {
             window.location.href = 'index.html';
-        }, 3500);
+        }, 3000);
     }
+
+    carregarSaldo();
     </script>
 </body>
 </html>
