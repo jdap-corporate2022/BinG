@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#03120a">
+    <title>Bicho777Bet - Depósito PIX</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background: #020d07 radial-gradient(circle at 50% 25%, #083b1d 0%, #03150b 50%, #010804 100%) no-repeat fixed;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 50px;
+            border-bottom: 1px solid rgba(0, 255, 120, 0.15);
+            margin-bottom: 20px;
+        }
+
+        .back-button {
+            color: #ffc200;
+            font-size: 24px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .title {
+            color: #ffc200;
+            font-weight: 900;
+            font-size: 16px;
+            letter-spacing: 0.5px;
+        }
+
+        .banner {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid #10e36b;
+            border-radius: 12px;
+            padding: 16px;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .banner h3 {
+            color: #10e36b;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .banner p {
+            font-size: 12px;
+            color: #ccc;
+        }
+
+        .section-label {
+            font-size: 12px;
+            color: #10e36b;
+            font-weight: bold;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .input-group {
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .input-group input {
+            width: 100%;
+            height: 50px;
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid #ffc200;
+            border-radius: 10px;
+            padding: 0 16px;
+            color: #ffc200;
+            font-size: 20px;
+            font-weight: bold;
+            text-align: center;
+            outline: none;
+        }
+
+        .quick-values {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .val-btn {
+            background: linear-gradient(180deg, #022e14 0%, #01190a 100%);
+            border: 1px solid #10e36b;
+            border-radius: 8px;
+            color: #fff;
+            padding: 12px 0;
+            font-size: 14px;
+            font-weight: bold;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        .val-btn:active, .val-btn.selected {
+            background: linear-gradient(180deg, #ffdb33 0%, #f3a800 100%);
+            color: #000;
+            border-color: #fff;
+        }
+
+        .submit-btn {
+            width: 100%;
+            height: 52px;
+            border-radius: 12px;
+            border: 1px solid #fff2a3;
+            background: linear-gradient(180deg, #ffdb33 0%, #f3a800 60%, #c47f00 100%);
+            color: #050a06;
+            font-size: 16px;
+            font-weight: 900;
+            cursor: pointer;
+            box-shadow: 0 4px 15px rgba(243, 168, 0, 0.4);
+            margin-top: auto;
+        }
+
+        /* Modal PIX */
+        .modal-overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 1000; padding: 16px;
+        }
+
+        .modal-card {
+            background: #03150b;
+            border: 1px solid #10e36b;
+            border-radius: 12px;
+            padding: 20px;
+            width: 100%;
+            max-width: 360px;
+            text-align: center;
+            color: #fff;
+            box-shadow: 0 0 20px rgba(16, 227, 107, 0.2);
+        }
+
+        .timer-badge {
+            display: inline-block;
+            background: rgba(255, 194, 0, 0.15);
+            color: #ffc200;
+            border: 1px solid #ffc200;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 12px;
+        }
+
+        .success-icon {
+            font-size: 50px;
+            color: #10e36b;
+            margin-bottom: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <header class="header">
+            <a href="index.html" class="back-button">❮</a>
+            <span class="title">DEPOSITAR SALDO</span>
+            <div></div>
+        </header>
+
+        <div class="banner">
+            <h3>⚡ Depósito Via PIX</h3>
+            <p>O valor cai no seu saldo automaticamente assim que o pagamento for aprovado!</p>
+        </div>
+
+        <div class="section-label">Digite o valor do depósito:</div>
+        <div class="input-group">
+            <input type="number" id="depositAmount" placeholder="R$ 10,00" min="1" step="1" value="10">
+        </div>
+
+        <div class="section-label">Ou escolha um valor rápido:</div>
+        <div class="quick-values">
+            <button class="val-btn" onclick="setValor(10)">R$ 10</button>
+            <button class="val-btn" onclick="setValor(20)">R$ 20</button>
+            <button class="val-btn" onclick="setValor(50)">R$ 50</button>
+            <button class="val-btn" onclick="setValor(100)">R$ 100</button>
+            <button class="val-btn" onclick="setValor(200)">R$ 200</button>
+            <button class="val-btn" onclick="setValor(500)">R$ 500</button>
+        </div>
+
+        <button class="submit-btn" id="generatePixBtn">GERAR PIX ❯</button>
+    </div>
+
+    <script>
+        const API_URL = 'https://bing-j6vi.onrender.com';
+        let timerInterval = null;
+        let statusInterval = null;
+
+        function setValor(val) {
+            document.getElementById('depositAmount').value = val;
+        }
+
+        document.getElementById('generatePixBtn').addEventListener('click', async () => {
+            const inputVal = parseFloat(document.getElementById('depositAmount').value);
+            
+            if (isNaN(inputVal) || inputVal < 1) {
+                alert('Informe um valor de no mínimo R$ 1,00.');
+                return;
+            }
+
+            const btn = document.getElementById('generatePixBtn');
+            btn.disabled = true;
+            btn.textContent = 'GERANDO PIX...';
+
+            try {
+                const response = await fetch(`${API_URL}/api/pagamentos/pix`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        usuario_id: 1,
+                        valor: inputVal,
+                        email_usuario: 'comprador.teste@gmail.com'
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.qr_code_base64) {
+                    exibirModalPix(data.qr_code_base64, data.qr_code, data.payment_id);
+                    iniciarTimerPix(15 * 60);
+                    monitorarPagamento(data.payment_id);
+                } else {
+                    alert(data.error || 'Erro ao gerar PIX.');
+                }
+            } catch (error) {
+                console.error('Erro na requisição:', error);
+                alert('Erro de conexão com o servidor.');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = 'GERAR PIX ❯';
+            }
+        });
+
+        function exibirModalPix(qrBase64, qrCode, paymentId) {
+            let modal = document.getElementById('pixModal');
+            if (!modal) {
+                modal = document.createElement('div');
+                modal.id = 'pixModal';
+                modal.className = 'modal-overlay';
+                document.body.appendChild(modal);
+            }
+
+            modal.innerHTML = `
+                <div class="modal-card" id="modalCard">
+                    <div class="timer-badge">⏳ PIX expira em: <span id="pixTimer">15:00</span></div>
+                    <h3 style="color: #ffc200; margin-bottom: 8px;">PAGAMENTO PIX</h3>
+                    <p style="font-size: 12px; margin-bottom: 12px; color: #ccc;">Escaneie o QR Code ou copie o código abaixo:</p>
+                    
+                    <img src="data:image/png;base64,${qrBase64}" alt="QR Code PIX" style="width: 170px; height: 170px; margin-bottom: 12px; border-radius: 8px; border: 2px solid #ffc200;"/>
+                    
+                    <textarea id="copiaColaText" readonly style="width: 100%; height: 50px; background: #010804; color: #10e36b; border: 1px solid #10e36b; border-radius: 6px; padding: 6px; font-size: 10px; margin-bottom: 12px; resize: none;">${qrCode}</textarea>
+                    
+                    <button id="copyBtn" style="width: 100%; height: 40px; background: #10e36b; color: #000; border: none; border-radius: 8px; font-weight: bold; cursor: pointer; margin-bottom: 8px;">COPIAR CÓDIGO PIX</button>
+                    <button id="closeModalBtn" style="width: 100%; height: 35px; background: transparent; color: #ff5555; border: 1px solid #ff5555; border-radius: 8px; font-size: 12px; cursor: pointer;">CANCELAR</button>
+                </div>
+            `;
+
+            document.getElementById('copyBtn').addEventListener('click', () => {
+                const copyText = document.getElementById('copiaColaText');
+                copyText.select();
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(qrCode);
+                }
+                alert('Código PIX copiado!');
+            });
+
+            document.getElementById('closeModalBtn').addEventListener('click', fecharModal);
+            modal.style.display = 'flex';
+        }
+
+        function iniciarTimerPix(duracaoSegundos) {
+            clearInterval(timerInterval);
+            let tempoRestante = duracaoSegundos;
+
+            timerInterval = setInterval(() => {
+                const min = Math.floor(tempoRestante / 60).toString().padStart(2, '0');
+                const seg = (tempoRestante % 60).toString().padStart(2, '0');
+
+                const timerEl = document.getElementById('pixTimer');
+                if (timerEl) timerEl.textContent = `${min}:${seg}`;
+
+                if (--tempoRestante < 0) {
+                    clearInterval(timerInterval);
+                    clearInterval(statusInterval);
+                    alert('O tempo para pagamento do PIX expirou.');
+                    fecharModal();
+                }
+            }, 1000);
+        }
+
+        function fecharModal() {
+            clearInterval(timerInterval);
+            clearInterval(statusInterval);
+            const modal = document.getElementById('pixModal');
+            if (modal) modal.style.display = 'none';
+        }
+
+        function monitorarPagamento(paymentId) {
+            clearInterval(statusInterval);
+            statusInterval = setInterval(async () => {
+                try {
+                    const res = await fetch(`${API_URL}/api/pagamentos/status/${paymentId}`);
+                    const data = await res.json();
+
+                    if (data.status === 'approved') {
+                        clearInterval(statusInterval);
+                        clearInterval(timerInterval);
+                        exibirSucesso();
+                    }
+                } catch (err) {
+                    console.error('Erro ao verificar status:', err);
+                }
+            }, 3000);
+        }
+
+        function exibirSucesso() {
+            const modalCard = document.getElementById('modalCard');
+            if (!modalCard) return;
+
+            modalCard.style.borderColor = '#10e36b';
+            modalCard.style.boxShadow = '0 0 30px rgba(16, 227, 107, 0.6)';
+
+            modalCard.innerHTML = `
+                <div class="success-icon">✔</div>
+                <h2 style="color: #10e36b; margin-bottom: 8px;">DEPÓSITO APROVADO!</h2>
+                <p style="font-size: 14px; color: #fff; margin-bottom: 16px;">Seu saldo foi creditado com sucesso.</p>
+                <p style="font-size: 12px; color: #aaa;">Redirecionando para a tela inicial...</p>
+            `;
+
+            setTimeout(() => {
+                window.location.href = 'index.html';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
