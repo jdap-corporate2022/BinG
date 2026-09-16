@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#03120a">
+    <title>Resultados - Bicho777Bet</title>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background: #020d07 radial-gradient(circle at 50% 25%, #083b1d 0%, #03150b 50%, #010804 100%) no-repeat fixed;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            overflow-x: hidden;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            padding-bottom: 85px;
+            position: relative;
+            background: radial-gradient(ellipse at 50% 0%, rgba(0, 255, 100, 0.15) 0%, transparent 70%);
+        }
+
+        /* HEADER */
+        .header {
+            width: 100%;
+            height: 70px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 16px;
+            background: linear-gradient(180deg, #011409 0%, rgba(1, 20, 9, 0.8) 100%);
+            border-bottom: 1px solid rgba(0, 255, 120, 0.15);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .back-button {
+            background: none;
+            border: none;
+            color: #ffc200;
+            font-size: 20px;
+            cursor: pointer;
+            text-decoration: none;
+            font-weight: bold;
+        }
+
+        .header-title {
+            font-size: 18px;
+            font-weight: 900;
+            color: #ffc200;
+            letter-spacing: -0.5px;
+        }
+
+        /* CONTENT */
+        .content {
+            padding: 16px;
+        }
+
+        /* FILTROS DE DATA/HORÁRIO */
+        .filter-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .filter-input, .filter-select {
+            flex: 1;
+            padding: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(0, 255, 120, 0.3);
+            background: #011f0d;
+            color: #fff;
+            font-size: 13px;
+            outline: none;
+        }
+
+        .filter-input::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+        }
+
+        /* CARD DE RESULTADO */
+        .result-card {
+            background: linear-gradient(180deg, rgba(0, 31, 15, 0.95) 0%, rgba(0, 15, 7, 0.98) 100%);
+            border: 1px solid rgba(0, 255, 120, 0.25);
+            border-radius: 12px;
+            padding: 14px;
+            margin-bottom: 16px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding-bottom: 8px;
+            margin-bottom: 10px;
+        }
+
+        .draw-name {
+            font-size: 14px;
+            font-weight: 800;
+            color: #ffc200;
+        }
+
+        .draw-date {
+            font-size: 12px;
+            color: #8da496;
+        }
+
+        /* TABELA DE PRÊMIOS */
+        .draw-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .draw-table th {
+            font-size: 10px;
+            color: #7d9487;
+            text-transform: uppercase;
+            text-align: left;
+            padding-bottom: 6px;
+        }
+
+        .draw-table td {
+            padding: 6px 0;
+            font-size: 13px;
+            border-bottom: 1px rgba(255, 255, 255, 0.05) dashed;
+        }
+
+        .draw-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .rank {
+            font-weight: 800;
+            color: #10e36b;
+            width: 25%;
+        }
+
+        .number {
+            font-weight: 900;
+            letter-spacing: 1px;
+            color: #fff;
+            width: 35%;
+        }
+
+        .animal {
+            color: #ffc200;
+            font-weight: 700;
+            width: 40%;
+            text-align: right;
+        }
+
+        /* BOTTOM NAV */
+        .bottom-navigation {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            max-width: 480px;
+            height: 60px;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            background: linear-gradient(180deg, #011208 0%, #000a04 100%);
+            border-top: 1px solid rgba(0, 255, 120, 0.2);
+            z-index: 100;
+        }
+
+        .nav-item {
+            border: 0;
+            background: transparent;
+            color: #6e8578;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 2px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .nav-icon {
+            font-size: 18px;
+        }
+
+        .nav-label {
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .nav-item.active {
+            color: #10e36b;
+        }
+
+        .loading-state, .empty-state {
+            text-align: center;
+            padding: 30px 10px;
+            color: #8da496;
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- HEADER -->
+        <header class="header">
+            <a href="index.html" class="back-button">❮ Voltar</a>
+            <div class="header-title">Resultados</div>
+            <div style="width: 50px;"></div>
+        </header>
+
+        <!-- CONTEÚDO -->
+        <main class="content">
+            <!-- FILTROS -->
+            <div class="filter-box">
+                <input type="date" id="filterDate" class="filter-input">
+                <select id="filterHorario" class="filter-select">
+                    <option value="todos">Todos Horários</option>
+                    <option value="11:00">11:00 - PTM</option>
+                    <option value="14:30">14:30 - PT</option>
+                    <option value="16:00">16:00 - PTV</option>
+                    <option value="18:00">18:00 - PTN</option>
+                    <option value="21:00">21:00 - COR</option>
+                </select>
+            </div>
+
+            <!-- CONTAINER DE RESULTADOS -->
+            <div id="resultsContainer">
+                <div class="loading-state">Carregando resultados...</div>
+            </div>
+        </main>
+
+        <!-- NAVEGAÇÃO INFERIOR -->
+        <nav class="bottom-navigation">
+            <a href="index.html" class="nav-item">
+                <span class="nav-icon">🏠</span>
+                <span class="nav-label">Início</span>
+            </a>
+            <a href="minhas-apostas.html" class="nav-item">
+                <span class="nav-icon">📋</span>
+                <span class="nav-label">Minhas Apostas</span>
+            </a>
+            <a href="resultados.html" class="nav-item active">
+                <span class="nav-icon">📊</span>
+                <span class="nav-label">Resultados</span>
+            </a>
+            <a href="perfil.html" class="nav-item">
+                <span class="nav-icon">👤</span>
+                <span class="nav-label">Perfil</span>
+            </a>
+        </nav>
+    </div>
+
+    <script>
+        const API_URL = 'https://bing-j6vi.onrender.com';
+        const resultsContainer = document.getElementById('resultsContainer');
+        const filterDate = document.getElementById('filterDate');
+        const filterHorario = document.getElementById('filterHorario');
+
+        // Define a data de hoje no input de data por padrão
+        const today = new Date().toISOString().split('T')[0];
+        filterDate.value = today;
+
+        async function carregarResultados() {
+            resultsContainer.innerHTML = '<div class="loading-state">Carregando resultados...</div>';
+            
+            const dataSelecionada = filterDate.value;
+            const horarioSelecionado = filterHorario.value;
+
+            try {
+                const res = await fetch(`${API_URL}/api/resultados?data=${dataSelecionada}&horario=${horarioSelecionado}`);
+                const resultados = await res.json();
+
+                if (!resultados || resultados.length === 0) {
+                    resultsContainer.innerHTML = '<div class="empty-state">Nenhum resultado encontrado para esta data/horário.</div>';
+                    return;
+                }
+
+                renderizarResultados(resultados);
+            } catch (err) {
+                console.error('Erro ao buscar resultados:', err);
+                resultsContainer.innerHTML = '<div class="empty-state">Erro ao carregar os resultados. Tente novamente mais tarde.</div>';
+            }
+        }
+
+        function renderizarResultados(lista) {
+            resultsContainer.innerHTML = '';
+
+            lista.forEach(item => {
+                const card = document.createElement('div');
+                card.className = 'result-card';
+
+                let linhasPremios = '';
+                item.premios.forEach((p, index) => {
+                    linhasPremios += `
+                        <tr>
+                            <td class="rank">${index + 1}º Prêmio</td>
+                            <td class="number">${p.milhar}</td>
+                            <td class="animal">${p.bicho} (Gr. ${p.grupo})</td>
+                        </tr>
+                    `;
+                });
+
+                card.innerHTML = `
+                    <div class="result-header">
+                        <span class="draw-name">${item.nomeSorteio || 'Sorteio ' + item.horario}</span>
+                        <span class="draw-date">${item.data} - ${item.horario}</span>
+                    </div>
+                    <table class="draw-table">
+                        <thead>
+                            <tr>
+                                <th>Prêmio</th>
+                                <th>Milhar</th>
+                                <th style="text-align: right;">Bicho</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${linhasPremios}
+                        </tbody>
+                    </table>
+                `;
+
+                resultsContainer.appendChild(card);
+            });
+        }
+
+        filterDate.addEventListener('change', carregarResultados);
+        filterHorario.addEventListener('change', carregarResultados);
+
+        // Carga inicial
+        carregarResultados();
+    </script>
+</body>
+</html>
