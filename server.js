@@ -14,16 +14,17 @@ const pool = new Pool({
     connectionString: process.env.DATABASE_URL
 });
 
-// Inicialização do Schema e Tabelas
+// Inicialização do Schema, Tabelas e Usuário Admin Padrão
 const initDb = async () => {
     try {
         await pool.query(`
             CREATE TABLE IF NOT EXISTS usuarios (
                 id SERIAL PRIMARY KEY,
                 nome VARCHAR(100) NOT NULL,
-                telefone VARCHAR(20) UNIQUE NOT NULL,
+                telefone VARCHAR(50) UNIQUE NOT NULL,
                 senha VARCHAR(255) NOT NULL,
                 email VARCHAR(100),
+                is_admin BOOLEAN DEFAULT FALSE,
                 criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
 
@@ -65,6 +66,23 @@ const initDb = async () => {
                 criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
         `);
+
+        // Garante a existência da coluna is_admin em bancos já populados
+        await pool.query(`
+            ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT FALSE;
+        `);
+
+        // Criação automática do usuário administrador
+        const adminCheck = await pool.query("SELECT id FROM usuarios WHERE telefone = 'admin'");
+        if (adminCheck.rows.length === 0) {
+            const hashSenhaAdmin = await bcrypt.hash('@Dell8245', 10);
+            await pool.query(
+                "INSERT INTO usuarios (nome, telefone, senha, is_admin) VALUES ('Administrador', 'admin', $1, TRUE)",
+                [hashSenhaAdmin]
+            );
+            console.log("Usuário Administrador 'admin' criado com sucesso.");
+        }
+
         console.log("Banco de dados, tabelas e schema inicializados com sucesso.");
     } catch (err) {
         console.error("Erro ao inicializar banco de dados:", err);
@@ -78,6 +96,39 @@ const client = new MercadoPagoConfig({
     accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN 
 });
 const payment = new Payment(client);
+
+// ROTA: Login do Painel Administrativo
+app.post('/api/admin/login', async (req, res) => {
+    const { login, senha } = req.body;
+
+    if (!login || !senha) {
+        return res.status(400).json({ error: 'Informe o login e a senha de administrador.' });
+    }
+
+    try {
+        const result = await pool.query('SELECT * FROM usuarios WHERE telefone = $1 AND is_admin = TRUE', [login]);
+        
+        if (result.rows.length === 0) {
+            return res.status(403).json({ error: 'Login ou senha incorretos.' });
+        }
+
+        const admin = result.rows[0];
+        const senhaValida = await bcrypt.compare(senha, admin.senha);
+
+        if (!senhaValida) {
+            return res.status(403).json({ error: 'Login ou senha incorretos.' });
+        }
+
+        res.json({
+            admin: { id: admin.id, nome: admin.nome },
+            token: `admin_token_${admin.id}_${Date.now()}`
+        });
+
+    } catch (error) {
+        console.error('Erro na autenticação admin:', error);
+        res.status(500).json({ error: 'Erro interno ao autenticar administrador.' });
+    }
+});
 
 // ROTA: Cadastro de Usuário
 app.post('/api/auth/cadastro', async (req, res) => {
@@ -102,7 +153,6 @@ app.post('/api/auth/cadastro', async (req, res) => {
 
         const userId = newUser.rows[0].id;
 
-        // Cria a carteira inicial zerada para o novo usuário
         await pool.query(
             'INSERT INTO carteiras (usuario_id, saldo) VALUES ($1, 0.00) ON CONFLICT DO NOTHING',
             [userId]
