@@ -51,12 +51,10 @@ const initDb = async () => {
                 atualizado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
             );
 
-            -- Cria o usuário padrão ID 1 caso não exista nenhum no banco
             INSERT INTO usuarios (id, nome, email) 
             VALUES (1, 'Usuário Visitante', 'visitante@bicho777.com')
             ON CONFLICT (id) DO NOTHING;
 
-            -- Cria a carteira vinculada ao usuário ID 1
             INSERT INTO carteiras (usuario_id, saldo)
             VALUES (1, 0.00)
             ON CONFLICT DO NOTHING;
@@ -79,8 +77,7 @@ const payment = new Payment(client);
 app.post('/api/pagamentos/pix', async (req, res) => {
     const { usuario_id, valor, email_usuario } = req.body;
 
-    // Se o frontend não mandar valor, usa 2.00 por padrão.
-    const valorFinal = Number(valor) > 0 ? Number(valor) : 2.00;
+    const valorFinal = Number(valor) >= 1 ? Number(valor) : 2.00;
 
     try {
         const body = {
@@ -96,12 +93,11 @@ app.post('/api/pagamentos/pix', async (req, res) => {
                     number: '85223307040'
                 }
             },
-            notification_url: process.env.WEBHOOK_URL || 'https://bing-j6vi.onrender.com/api/webhooks/mercadopago'
+            notification_url: 'https://bing-j6vi.onrender.com/api/webhooks/mercadopago'
         };
 
         const mpResponse = await payment.create({ body });
 
-        // Associa sempre ao usuário 1 caso não seja informado outro no frontend
         await pool.query(
             'INSERT INTO pagamentos_pix (usuario_id, mp_payment_id, valor, status) VALUES ($1, $2, $3, $4)',
             [usuario_id || 1, mpResponse.id, valorFinal, mpResponse.status]
