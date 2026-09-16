@@ -14,14 +14,14 @@ const pool = new Pool({
     connectionString: process.env.DATABASE_URL
 });
 
-// Inicialização do Schema sem a coluna email
+// Inicialização e Sincronização do Schema
 const initDb = async () => {
     try {
+        // 1. Criação Inicial das Tabelas
         await pool.query(`
             CREATE TABLE IF NOT EXISTS usuarios (
                 id SERIAL PRIMARY KEY,
                 nome VARCHAR(100) NOT NULL,
-                telefone VARCHAR(50) UNIQUE NOT NULL,
                 senha VARCHAR(255) NOT NULL,
                 is_admin BOOLEAN DEFAULT FALSE,
                 criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
@@ -66,20 +66,27 @@ const initDb = async () => {
             );
         `);
 
-        // Remove a coluna email da tabela se ela já existir no banco
+        // 2. Garante que a coluna 'telefone' exista caso a tabela antiga não a possua
+        try {
+            await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS telefone VARCHAR(50) UNIQUE;');
+        } catch (e) {
+            console.log("Nota: Coluna 'telefone' já presente.");
+        }
+
+        // 3. Remove a restrição NOT NULL ou apaga a coluna 'email' antiga
         try {
             await pool.query('ALTER TABLE usuarios DROP COLUMN IF EXISTS email;');
         } catch (e) {
-            console.log("Nota: Coluna email já foi removida.");
+            console.log("Nota: Coluna 'email' já removida.");
         }
 
         try {
             await pool.query('ALTER TABLE usuarios ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT FALSE;');
         } catch (e) {
-            console.log("Nota: Coluna is_admin já existe.");
+            console.log("Nota: Coluna 'is_admin' já presente.");
         }
 
-        // Criar Usuário Admin Padrão
+        // 4. Criação do Usuário Administrador Padrão
         const adminCheck = await pool.query("SELECT id FROM usuarios WHERE telefone = 'admin'");
         if (adminCheck.rows.length === 0) {
             const hashSenhaAdmin = await bcrypt.hash('@Dell8245', 10);
@@ -90,7 +97,7 @@ const initDb = async () => {
             console.log("Usuário Administrador 'admin' criado com sucesso.");
         }
 
-        console.log("Banco de dados pronto para uso.");
+        console.log("Banco de dados pronto e sincronizado para uso.");
     } catch (err) {
         console.error("Erro ao inicializar banco de dados:", err);
     }
@@ -133,11 +140,11 @@ app.post('/api/admin/login', async (req, res) => {
 
     } catch (error) {
         console.error('Erro na autenticação admin:', error);
-        res.status(500).json({ error: 'Erro interno ao autenticar administrador.' });
+        res.status(500).json({ error: error.message || 'Erro interno ao autenticar administrador.' });
     }
 });
 
-// ROTA: Cadastro de Usuário (100% livre de e-mail)
+// ROTA: Cadastro de Usuário (Retornando detalhes do erro em caso de falha)
 app.post('/api/auth/cadastro', async (req, res) => {
     const { nome, telefone, senha } = req.body;
 
@@ -172,7 +179,7 @@ app.post('/api/auth/cadastro', async (req, res) => {
 
     } catch (error) {
         console.error('Erro no cadastro:', error);
-        res.status(500).json({ error: 'Erro interno ao realizar cadastro.' });
+        res.status(500).json({ error: error.message || 'Erro interno ao realizar cadastro.' });
     }
 });
 
@@ -204,7 +211,7 @@ app.post('/api/auth/login', async (req, res) => {
 
     } catch (error) {
         console.error('Erro no login:', error);
-        res.status(500).json({ error: 'Erro interno ao realizar login.' });
+        res.status(500).json({ error: error.message || 'Erro interno ao realizar login.' });
     }
 });
 
@@ -238,7 +245,7 @@ app.post('/api/pagamentos/pix', async (req, res) => {
             description: 'Deposito de Saldo - Bicho777Bet',
             payment_method_id: 'pix',
             payer: {
-                email: 'cliente@bicho777bet.com', // E-mail fixo exigido apenas pela API do Mercado Pago
+                email: 'cliente@bicho777bet.com',
                 first_name: 'Cliente',
                 last_name: 'Usuario'
             },
