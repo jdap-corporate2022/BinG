@@ -32,8 +32,8 @@
             <div class="login-title">ÁREA RESTRITA ADMIN</div>
             <form id="formAdminLogin">
                 <div class="form-group">
-                    <label>Telefone do Administrador</label>
-                    <input type="tel" id="adminPhone" required>
+                    <label> Login </label>
+                    <input type="login" id="adminLogin" required>
                 </div>
                 <div class="form-group">
                     <label>Senha</label>
@@ -81,14 +81,14 @@
 
         document.getElementById('formAdminLogin').addEventListener('submit', async (e) => {
             e.preventDefault();
-            const telefone = document.getElementById('adminPhone').value;
+            const login = document.getElementById('adminLogin').value;
             const senha = document.getElementById('adminPassword').value;
 
             try {
                 const res = await fetch(`${API_URL}/api/admin/login`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ telefone, senha })
+                    body: JSON.stringify({ login , senha })
                 });
 
                 const data = await res.json();
