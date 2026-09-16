@@ -139,6 +139,41 @@
             justify-content: center;
         }
 
+        .user-avatar-btn {
+            width: 34px;
+            height: 34px;
+            border-radius: 50%;
+            background: linear-gradient(180deg, #ffdb33 0%, #f3a800 100%);
+            color: #000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            font-size: 14px;
+            text-decoration: none;
+            border: 1px solid #fff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.5);
+        }
+
+        .auth-btn-login {
+            color: #fff;
+            font-size: 12px;
+            font-weight: 800;
+            text-decoration: none;
+            padding: 6px 10px;
+        }
+
+        .auth-btn-cadastro {
+            background: #ff9800;
+            color: #000;
+            font-size: 12px;
+            font-weight: 900;
+            text-decoration: none;
+            padding: 6px 12px;
+            border-radius: 6px;
+            box-shadow: 0 2px 8px rgba(255, 152, 0, 0.4);
+        }
+
         /* CONTENT */
         .content {
             padding: 10px 10px 0;
@@ -547,12 +582,10 @@
                 <div class="brand-name">Bicho777Bet <span class="brand-clover">♣</span></div>
                 <div class="brand-slogan">A SORTE É SEU MELHOR PALPITE!</div>
             </div>
-            <div class="header-right">
-                <div class="balance-box">
-                    <span class="balance-label">SALDO</span>
-                    <strong id="balance">R$ 0,00</strong>
-                </div>
-                <a href="deposito.html" class="add-button">+</a>
+            
+            <!-- ÁREA DE AUTENTICAÇÃO / SALDO DINÂMICA -->
+            <div class="header-right" id="headerAuth">
+                <!-- Preenchido via JS baseado na sessão do usuário -->
             </div>
         </header>
 
@@ -560,17 +593,17 @@
         <main class="content">
             <!-- CARDS SUPERIORES -->
             <section class="top-cards">
-                <button class="top-card" id="resultButton">
+                <a href="resultados.html" class="top-card">
                     <div class="card-symbol">🏆</div>
                     <div class="card-title">RESULTADO</div>
                     <div class="card-subtitle">Último sorteio</div>
-                </button>
+                </a>
 
                 <div class="top-card next-draw">
                     <div class="next-title">PRÓXIMO SORTEIO:</div>
                     <div class="next-date">
                         <span class="calendar-icon">📅</span>
-                        <strong id="drawDate">20/08</strong>
+                        <strong id="drawDate">HOJE</strong>
                     </div>
                     <div class="next-time">
                         <span class="clock-icon">🕒</span>
@@ -618,7 +651,7 @@
             </section>
 
             <!-- BOTÃO PRINCIPAL DE APOSTA -->
-            <a href="valor.html" class="bet-button">
+            <a href="apostar.html" class="bet-button">
                 <span>🎲</span>
                 <span>FAÇA SUA APOSTA</span>
                 <span>❯</span>
@@ -637,11 +670,11 @@
                 <span class="nav-label">Minhas Apostas</span>
             </a>
             
-            <a href="resultados.html" class="nav-item" id="navResultados">
+            <a href="resultados.html" class="nav-item">
                 <span class="nav-icon">📊</span>
                 <span class="nav-label">Resultados</span>
             </a>
-            <a href="perfil.html" class="nav-item" id="navPerfil">
+            <a href="perfil.html" class="nav-item">
                 <span class="nav-icon">👤</span>
                 <span class="nav-label">Perfil</span>
             </a>
@@ -657,8 +690,8 @@
         </div>
         <a href="index.html" class="side-option">🏠 &nbsp; Início</a>
         <a href="minhas-apostas.html" class="side-option">🎟️ &nbsp; Minhas Apostas</a>
-        <a href="resultados.html" class="side-option" id="sideResultados">🏆 &nbsp; Resultados</a>
-        <a href="perfil.html" class="side-option" id="sidePerfil">👤 &nbsp; Perfil</a>
+        <a href="resultados.html" class="side-option">🏆 &nbsp; Resultados</a>
+        <a href="perfil.html" class="side-option">👤 &nbsp; Perfil</a>
         <button class="side-option" id="sideComoJogar">❓ &nbsp; Como Jogar</button>
     </aside>
 
@@ -675,22 +708,52 @@
     <script>
         const API_URL = 'https://bing-j6vi.onrender.com';
 
-        // Busca o saldo real no backend
-        async function carregarSaldo() {
+        // VERIFICAÇÃO DE SESSÃO E RENDERIZAÇÃO DO CABEÇALHO
+        function verificarSessao() {
+            const userJson = localStorage.getItem('user');
+            const headerAuth = document.getElementById('headerAuth');
+
+            if (!userJson) {
+                // USUÁRIO DESLOGADO / VISITANTE
+                headerAuth.innerHTML = `
+                    <a href="login.html" class="auth-btn-login">Entrar</a>
+                    <a href="login.html?tab=cadastro" class="auth-btn-cadastro">Cadastrar</a>
+                `;
+            } else {
+                // USUÁRIO LOGADO
+                const user = JSON.parse(userJson);
+                const inicial = user.nome ? user.nome.charAt(0).toUpperCase() : 'U';
+
+                headerAuth.innerHTML = `
+                    <div class="balance-box">
+                        <span class="balance-label">SALDO</span>
+                        <strong id="balance">R$ 0,00</strong>
+                    </div>
+                    <a href="deposito.html" class="add-button" title="Depositar Saldo">+</a>
+                    <a href="perfil.html" class="user-avatar-btn" title="Meu Perfil">${inicial}</a>
+                `;
+
+                carregarSaldo(user.id);
+            }
+        }
+
+        // BUSCAR SALDO DO USUÁRIO NO BACKEND
+        async function carregarSaldo(userId) {
             try {
-                const res = await fetch(`${API_URL}/api/usuario/1/saldo`);
+                const res = await fetch(`${API_URL}/api/usuario/${userId}/saldo`);
                 const data = await res.json();
                 if (data.saldo !== undefined) {
-                    document.getElementById('balance').textContent = `R$ ${data.saldo.toFixed(2).replace('.', ',')}`;
+                    const balanceEl = document.getElementById('balance');
+                    if (balanceEl) {
+                        balanceEl.textContent = `R$ ${data.saldo.toFixed(2).replace('.', ',')}`;
+                    }
                 }
             } catch (err) {
                 console.error('Erro ao carregar saldo:', err);
             }
         }
 
-        carregarSaldo();
-
-        // Elementos Principais
+        // Elementos de Controle do Menu e Modal
         const menuButton = document.getElementById("menuButton");
         const closeMenu = document.getElementById("closeMenu");
         const sideMenu = document.getElementById("sideMenu");
@@ -712,7 +775,7 @@
         closeMenu.addEventListener("click", () => toggleMenu(false));
         menuOverlay.addEventListener("click", () => toggleMenu(false));
 
-        // Controle do Modal Genérico
+        // Controle do Modal
         function showModal(title, text) {
             modalTitle.textContent = title;
             modalText.textContent = text;
@@ -727,37 +790,18 @@
         modalAction.addEventListener("click", closeModal);
         modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
 
-        // Ações dos botões
-        document.getElementById("resultButton").addEventListener("click", () => {
-            showModal("Último Sorteio", "Confira o resultado do último sorteio.");
-        });
-
+        // Eventos
         document.getElementById("howToPlay").addEventListener("click", () => {
-            showModal("Como Jogar?", "Escolha seu grupo ou dezena, informe o valor e confirme a aposta.");
-        });
-
-        document.getElementById("navResultados").addEventListener("click", () => {
-            showModal("Resultados", "Todos os resultados dos sorteios.");
-        });
-
-        document.getElementById("navPerfil").addEventListener("click", () => {
-            showModal("Perfil", "Gerenciamento da sua conta.");
-        });
-
-        document.getElementById("sideResultados").addEventListener("click", () => {
-            toggleMenu(false);
-            showModal("Resultados", "Todos os resultados dos sorteios.");
-        });
-
-        document.getElementById("sidePerfil").addEventListener("click", () => {
-            toggleMenu(false);
-            showModal("Perfil", "Gerenciamento da sua conta.");
+            showModal("Como Jogar?", "Escolha seu grupo ou dezena, informe o valor da sua aposta e confirme seu palpite.");
         });
 
         document.getElementById("sideComoJogar").addEventListener("click", () => {
             toggleMenu(false);
-            showModal("Como Jogar?", "Escolha seu grupo ou dezena, informe o valor e confirme a aposta.");
+            showModal("Como Jogar?", "Escolha seu grupo ou dezena, informe o valor da sua aposta e confirme seu palpite.");
         });
+
+        // Inicializa a verificação de login ao carregar a página
+        verificarSessao();
     </script>
 </body>
 </html>
