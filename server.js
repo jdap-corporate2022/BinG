@@ -103,6 +103,18 @@ const initDb = async () => {
             console.log("Usuário Administrador 'admin' criado com sucesso.");
         }
 
+        // 4. Exclusão permanente de registros inválidos e visitantes incompletos
+        await pool.query(`
+            DELETE FROM usuarios 
+            WHERE nome IS NULL 
+               OR nome = '' 
+               OR nome = 'Usuário Visitante' 
+               OR telefone IS NULL 
+               OR telefone = '' 
+               OR telefone = 'null';
+        `);
+        console.log("Limpeza concluída: Registros inválidos excluídos com sucesso.");
+
         console.log("Banco de dados pronto e sincronizado para uso.");
     } catch (err) {
         console.error("Erro ao inicializar banco de dados:", err);
@@ -243,7 +255,6 @@ app.get('/api/usuario/:id/saldo', async (req, res) => {
 app.post('/api/pagamentos/pix', async (req, res) => {
     const { usuario_id, valor } = req.body;
 
-    // BLOQUEIO: Se não enviar usuario_id ou for inválido, rejeita
     if (!usuario_id) {
         return res.status(401).json({ error: 'Usuário não autenticado. Faça login para continuar.' });
     }
@@ -281,7 +292,6 @@ app.post('/api/pagamentos/pix', async (req, res) => {
         res.status(500).json({ error: 'Erro ao gerar cobrança PIX. Verifique os dados fornecidos.' });
     }
 });
-
 
 // ROTA: Webhook Mercado Pago
 app.post('/api/webhooks/mercadopago', async (req, res) => {
@@ -419,10 +429,14 @@ app.get('/api/admin/dashboard', async (req, res) => {
             "SELECT COALESCE(SUM(valor), 0) AS total FROM saques WHERE status = 'concluido' OR status = 'aprovado'"
         );
 
-        // 3. Total de Usuários Cadastrados (ignorando a conta admin)
-        const totalUsersRes = await pool.query(
-            "SELECT COUNT(id) AS total FROM usuarios WHERE is_admin = FALSE OR is_admin IS NULL"
-        );
+        // 3. Total de Usuários VÁLIDOS Cadastrados (ignorando admins e visitantes inválidos)
+        const totalUsersRes = await pool.query(`
+            SELECT COUNT(id) AS total 
+            FROM usuarios 
+            WHERE (is_admin = FALSE OR is_admin IS NULL)
+              AND nome IS NOT NULL AND nome != '' AND nome != 'Usuário Visitante'
+              AND telefone IS NOT NULL AND telefone != '' AND telefone != 'null'
+        `);
 
         // 4. Volume Total de Apostas
         const totalApostasRes = await pool.query(
@@ -438,12 +452,14 @@ app.get('/api/admin/dashboard', async (req, res) => {
             ORDER BY s.criado_em DESC
         `);
 
-        // 6. Lista de Todos os Usuários e seus respectivos Saldos
+        // 6. Lista de Todos os Usuários VÁLIDOS e seus respectivos Saldos
         const listaUsuariosRes = await pool.query(`
             SELECT u.id, u.nome, u.telefone AS email, COALESCE(c.saldo, 0.00) AS saldo
             FROM usuarios u
             LEFT JOIN carteiras c ON u.id = c.usuario_id
-            WHERE u.is_admin = FALSE OR u.is_admin IS NULL
+            WHERE (u.is_admin = FALSE OR u.is_admin IS NULL)
+              AND u.nome IS NOT NULL AND u.nome != '' AND u.nome != 'Usuário Visitante'
+              AND u.telefone IS NOT NULL AND u.telefone != '' AND u.telefone != 'null'
             ORDER BY u.id DESC
         `);
 
@@ -454,7 +470,7 @@ app.get('/api/admin/dashboard', async (req, res) => {
             totalUsuarios: parseInt(totalUsersRes.rows[0].total, 10),
             totalApostado: parseFloat(totalApostasRes.rows[0].total),
             saquesPendentes: saquesPendentesRes.rows,
-            depositosPendentes: [], // Pagamentos PIX via MP já caem automático pelo Webhook
+            depositosPendentes: [],
             listaUsuarios: listaUsuariosRes.rows.map(u => ({
                 ...u,
                 saldo: parseFloat(u.saldo)
@@ -466,7 +482,6 @@ app.get('/api/admin/dashboard', async (req, res) => {
         res.status(500).json({ error: 'Erro ao buscar métricas do sistema.' });
     }
 });
-
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
