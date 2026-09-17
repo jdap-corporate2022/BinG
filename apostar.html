@@ -312,6 +312,29 @@
         }
     }
 
+
+        // Função para validar se o usuário está logado
+function validarAcesso() {
+    const user = localStorage.getItem('user');
+    if (!user) {
+        alert('Você precisa estar logado para fazer uma aposta e gerar o pagamento!');
+        window.location.href = 'login.html';
+        return false;
+    }
+    return true;
+}
+
+// Exemplo: no evento de clique do botão "Gera PIX" ou "Confirmar Aposta"
+document.getElementById('btnGerarPix').addEventListener('click', function(e) {
+    if (!validarAcesso()) {
+        e.preventDefault(); // Impede o envio se não estiver logado
+        return;
+    }
+
+    // Segue o fluxo normal de gerar o PIX...
+});
+        
+
     document.getElementById('confirmBet').addEventListener('click', async () => {
         if (selectedItems.length === 0) {
             alert('Selecione ao menos um palpite.');
