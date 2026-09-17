@@ -1,3 +1,5 @@
+<script>
+    
 // Aguarda o carregamento completo da árvore DOM
 document.addEventListener('DOMContentLoaded', () => {
     inicializarTelaAposta();
@@ -142,3 +144,4 @@ function abrirModalSucesso() {
         }, 2000);
     }
 }
+</script>
