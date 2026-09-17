@@ -2,117 +2,294 @@
 <html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel Administrativo Restrito</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#03120a">
+    <title>Painel Admin - Bicho777Bet</title>
+    
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { background: #080d0a; color: #fff; font-family: sans-serif; display: flex; justify-content: center; min-height: 100vh; }
-        .container { width: 100%; max-width: 900px; padding: 20px; }
-        .hidden { display: none !important; }
-        
-        /* CARD LOGIN */
-        .login-box { max-width: 380px; margin: 80px auto; background: #111a14; border: 1px solid #ffc200; padding: 24px; border-radius: 12px; }
-        .login-title { font-size: 20px; color: #ffc200; font-weight: 800; text-align: center; margin-bottom: 20px; }
-        .form-group { margin-bottom: 14px; }
-        label { display: block; font-size: 12px; color: #10e36b; margin-bottom: 4px; }
-        input { width: 100%; padding: 10px; border-radius: 6px; border: 1px solid #10e36b; background: #050a07; color: #fff; }
-        .btn-admin { width: 100%; padding: 12px; background: #ffc200; border: none; font-weight: 900; cursor: pointer; border-radius: 6px; margin-top: 10px; }
-        
-        /* DASHBOARD ADMIN */
-        .admin-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #222; padding-bottom: 15px; margin-bottom: 20px; }
-        .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 25px; }
-        .kpi-card { background: #111a14; border: 1px solid rgba(0,255,120,0.2); padding: 16px; border-radius: 8px; }
-        .kpi-val { font-size: 24px; font-weight: 900; color: #ffc200; margin-top: 6px; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            width: 100%;
+            min-height: 100vh;
+            background: #020d07 radial-gradient(circle at 50% 25%, #083b1d 0%, #03150b 50%, #010804 100%) no-repeat fixed;
+            color: #fff;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+        }
+
+        .app {
+            width: 100%;
+            max-width: 480px;
+            min-height: 100vh;
+            padding: 16px;
+            padding-bottom: 40px;
+        }
+
+        /* HEADER */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid rgba(0, 255, 120, 0.2);
+        }
+
+        .header h1 {
+            font-size: 18px;
+            font-weight: 900;
+            color: #fff;
+        }
+
+        .header span {
+            color: #ffc200;
+            display: block;
+            font-size: 14px;
+        }
+
+        .btn-logout {
+            background: #ff3333;
+            color: #fff;
+            border: 0;
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 12px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        /* CARDS DASHBOARD */
+        .metrics-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .metric-card {
+            background: rgba(0, 31, 15, 0.8);
+            border: 1px solid rgba(0, 230, 118, 0.2);
+            border-radius: 10px;
+            padding: 14px;
+        }
+
+        .metric-title {
+            font-size: 11px;
+            color: #8da496;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .metric-value {
+            font-size: 20px;
+            font-weight: 900;
+            color: #ffc200;
+        }
+
+        /* SEÇÕES DE GERENCIAMENTO */
+        .admin-section {
+            background: rgba(1, 23, 11, 0.9);
+            border: 1px solid rgba(0, 255, 120, 0.15);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 16px;
+        }
+
+        .admin-section h2 {
+            font-size: 14px;
+            color: #10e36b;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        /* TABELA SIMPLES */
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 11px;
+        }
+
+        .data-table th, .data-table td {
+            padding: 8px 4px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .data-table th {
+            color: #8da496;
+            font-weight: 700;
+        }
+
+        /* FORMULÁRIOS */
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            background: rgba(0,0,0,0.5);
+            border: 1px solid rgba(0, 255, 120, 0.3);
+            border-radius: 6px;
+            color: #fff;
+            font-size: 13px;
+        }
+
+        .btn-action {
+            width: 100%;
+            padding: 10px;
+            background: linear-gradient(180deg, #1bd96a 0%, #089c44 100%);
+            border: 0;
+            border-radius: 6px;
+            color: #fff;
+            font-weight: 800;
+            font-size: 13px;
+            cursor: pointer;
+        }
+
+        .btn-approve {
+            background: #10e36b;
+            color: #000;
+            border: 0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 800;
+            cursor: pointer;
+        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- TELA DE AUTENTICAÇÃO RESTREITA -->
-        <div id="adminLoginView" class="login-box">
-            <div class="login-title">ÁREA RESTRITA ADMIN</div>
-            <form id="formAdminLogin">
-                <div class="form-group">
-                    <label> Login </label>
-                    <input type="login" id="adminLogin" required>
-                </div>
-                <div class="form-group">
-                    <label>Senha</label>
-                    <input type="password" id="adminPassword" required>
-                </div>
-                <button type="submit" class="btn-admin">ACESSAR PAINEL 🔒</button>
-            </form>
-        </div>
-
-        <!-- CONTEÚDO DO PAINEL ADMIN -->
-        <div id="adminDashboardView" class="hidden">
-            <header class="admin-header">
-                <h2>Painel de Controle Bicho777Bet</h2>
-                <button onclick="logoutAdmin()" style="background:#ff4444; color:#fff; border:none; padding:8px 12px; border-radius:6px; cursor:pointer;">Sair</button>
-            </header>
-
-            <div class="kpi-grid">
-                <div class="kpi-card">
-                    <div>Total Depositado</div>
-                    <div class="kpi-val" id="kpiDepositos">R$ 0,00</div>
-                </div>
-                <div class="kpi-card">
-                    <div>Total de Saques</div>
-                    <div class="kpi-val" id="kpiSaques">R$ 0,00</div>
-                </div>
-                <div class="kpi-card">
-                    <div>Usuários Cadastrados</div>
-                    <div class="kpi-val" id="kpiUsuarios">0</div>
-                </div>
+    <div class="app">
+        <!-- CABEÇALHO DO PAINEL -->
+        <header class="header">
+            <div>
+                <h1>Painel de Controle</h1>
+                <span>Bicho777Bet</span>
             </div>
-        </div>
+            <button class="btn-logout" onclick="fazerLogoutAdmin()">Sair</button>
+        </header>
+
+        <!-- DASHBOARD DE MÉTRICAS DA API -->
+        <section class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-title">Total Depositado</div>
+                <div class="metric-value" id="totalDepositado">R$ 0,00</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-title">Total de Saques</div>
+                <div class="metric-value" id="totalSaques">R$ 0,00</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-title">Usuários Cadastrados</div>
+                <div class="metric-value" id="totalUsuarios">0</div>
+            </div>
+
+            <div class="metric-card">
+                <div class="metric-title">Volume de Apostas</div>
+                <div class="metric-value" id="totalApostado">R$ 0,00</div>
+            </div>
+        </section>
+
+        <!-- LANÇAMENTO DE RESULTADOS (resultados.html) -->
+        <section class="admin-section">
+            <h2>🏆 Cadastrar Resultado</h2>
+            <form class="form-group" id="formResultado" onsubmit="salvarResultado(event)">
+                <input type="text" class="form-input" id="resHorario" placeholder="Horário (ex: 14:30 - PTM)" required>
+                <input type="text" class="form-input" id="resMilhar" placeholder="Milhar / Bicho (ex: 4521 - Touro)" required>
+                <button type="submit" class="btn-action">PUBLICAR RESULTADO</button>
+            </form>
+        </section>
+
+        <!-- SOLICITAÇÕES DE SAQUE (saque.html) -->
+        <section class="admin-section">
+            <h2>💸 Soluções de Saque Pendentes</h2>
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Usuário</th>
+                        <th>Chave PIX</th>
+                        <th>Valor</th>
+                        <th>Ação</th>
+                    </tr>
+                </thead>
+                <tbody id="tabelaSaques">
+                    <tr>
+                        <td colspan="4" style="text-align: center; color: #7d9487; padding: 12px 0;">Nenhum saque pendente</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
     </div>
 
     <script>
         const API_URL = 'https://bing-j6vi.onrender.com';
 
-        function verificarAutenticacaoAdmin() {
-            const adminToken = localStorage.getItem('admin_token');
-            if (adminToken) {
-                document.getElementById('adminLoginView').classList.add('hidden');
-                document.getElementById('adminDashboardView').classList.remove('hidden');
-                carregarMetricas();
-            }
-        }
-
-        document.getElementById('formAdminLogin').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const login = document.getElementById('adminLogin').value;
-            const senha = document.getElementById('adminPassword').value;
-
+        // CARREGA AS MÉTRICAS DO BANCO / API
+        async function carregarMetricasAdmin() {
             try {
-                const res = await fetch(`${API_URL}/api/admin/login`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ login , senha })
-                });
-
-                const data = await res.json();
+                const res = await fetch(`${API_URL}/api/admin/dashboard`);
                 if (res.ok) {
-                    localStorage.setItem('admin_token', data.token);
-                    verificarAutenticacaoAdmin();
-                } else {
-                    alert(data.error || 'Acesso negado.');
+                    const data = await res.json();
+                    document.getElementById('totalDepositado').textContent = `R$ ${data.totalDepositado.toFixed(2).replace('.', ',')}`;
+                    document.getElementById('totalSaques').textContent = `R$ ${data.totalSaques.toFixed(2).replace('.', ',')}`;
+                    document.getElementById('totalUsuarios').textContent = data.totalUsuarios;
+                    document.getElementById('totalApostado').textContent = `R$ ${(data.totalApostado || 0).toFixed(2).replace('.', ',')}`;
                 }
             } catch (err) {
-                alert('Erro de conexão com o servidor.');
+                console.error('Erro ao carregar dados do painel:', err);
             }
-        });
-
-        function logoutAdmin() {
-            localStorage.removeItem('admin_token');
-            location.reload();
         }
 
-        async function carregarMetricas() {
-            // Chamadas para métricas consolidadas
+        // SALVAR NOVO RESULTADO
+        async function salvarResultado(event) {
+            event.preventDefault();
+            const horario = document.getElementById('resHorario').value;
+            const resultado = document.getElementById('resMilhar').value;
+
+            try {
+                const res = await fetch(`${API_URL}/api/admin/resultados`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ horario, resultado })
+                });
+
+                if (res.ok) {
+                    alert('Resultado cadastrado com sucesso!');
+                    document.getElementById('formResultado').reset();
+                } else {
+                    alert('Erro ao cadastrar resultado.');
+                }
+            } catch (err) {
+                console.error('Erro de conexão:', err);
+            }
         }
 
-        verificarAutenticacaoAdmin();
+        // LOGOUT ADMINISTRATIVO
+        function fazerLogoutAdmin() {
+            localStorage.removeItem('adminToken');
+            window.location.href = 'index.html';
+        }
+
+        // INICIALIZAÇÃO
+        carregarMetricasAdmin();
     </script>
 </body>
 </html>
