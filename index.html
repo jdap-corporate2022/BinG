@@ -651,7 +651,7 @@
             </section>
 
             <!-- BOTÃO PRINCIPAL DE APOSTA -->
-            <a href="apostar.html" class="bet-button">
+            <a href="apostar.html" class="bet-button" id="btnApostar">
                 <span>🎲</span>
                 <span>FAÇA SUA APOSTA</span>
                 <span>❯</span>
@@ -702,6 +702,21 @@
             <h2 id="modalTitle">Bicho777Bet</h2>
             <p id="modalText">Conteúdo.</p>
             <button class="modal-action" id="modalAction">OK</button>
+        </div>
+    </div>
+
+    <!-- MODAL DE LOGIN OBRIGATÓRIO PARA APOSTAR -->
+    <div id="modalAuthRequired" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 16px;">
+        <div style="background: #011f0f; border: 1px solid #10e36b; border-radius: 12px; padding: 24px; text-align: center; max-width: 320px; width: 100%; color: #fff; box-shadow: 0 0 20px rgba(16, 227, 107, 0.25);">
+            <div style="font-size: 40px; margin-bottom: 10px;">🔐</div>
+            <h2 style="color: #ffc200; font-size: 18px; margin-bottom: 8px;">Login Necessário</h2>
+            <p style="color: #c4d4cc; font-size: 13px; margin-bottom: 20px; line-height: 1.4;">Você precisa estar conectado para poder escolher os palpites e apostar.</p>
+            
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <a href="login.html" style="background: #ffc200; color: #000; padding: 12px; border-radius: 8px; font-weight: 900; text-decoration: none; font-size: 14px;">ENTRAR NA CONTA</a>
+                <a href="login.html?tab=cadastro" style="background: rgba(0, 220, 100, 0.15); color: #10e36b; border: 1px solid #10e36b; padding: 12px; border-radius: 8px; font-weight: 800; text-decoration: none; font-size: 14px;">CRIAR CONTA</a>
+                <button onclick="fecharModalAuth()" style="background: transparent; border: none; color: #8da496; font-size: 13px; margin-top: 5px; cursor: pointer;">Cancelar</button>
+            </div>
         </div>
     </div>
 
@@ -798,6 +813,21 @@
         document.getElementById("sideComoJogar").addEventListener("click", () => {
             toggleMenu(false);
             showModal("Como Jogar?", "Escolha seu grupo ou dezena, informe o valor da sua aposta e confirme seu palpite.");
+        });
+
+        // TRAVA DO BOTÃO "FAÇA SUA APOSTA"
+        function fecharModalAuth() {
+            document.getElementById('modalAuthRequired').style.display = 'none';
+        }
+
+        document.getElementById('btnApostar').addEventListener('click', function(e) {
+            const userJson = localStorage.getItem('user');
+            
+            // Se NÃO houver usuário logado no localStorage
+            if (!userJson) {
+                e.preventDefault(); // Impede o redirecionamento para apostar.html
+                document.getElementById('modalAuthRequired').style.display = 'flex'; // Exibe o Pop-up
+            }
         });
 
         // Inicializa a verificação de login ao carregar a página
