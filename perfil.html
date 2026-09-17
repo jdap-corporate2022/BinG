@@ -323,37 +323,59 @@
         </nav>
     </div>
 
-    <script>
+        <script>
         const API_URL = 'https://bing-j6vi.onrender.com';
 
         async function carregarDadosPerfil() {
-            try {
-                // Busca dados do usuário (ID 1 de exemplo)
-                const res = await fetch(`${API_URL}/api/usuario/1`);
-                const usuario = await res.json();
+            // 1. Tenta pegar os dados salvos na sessão do navegador
+            const userJson = localStorage.getItem('user');
 
-                if (usuario && usuario.nome) {
-                    document.getElementById('userName').textContent = usuario.nome;
-                    document.getElementById('userEmail').textContent = usuario.email || 'usuario@bicho777.com';
-                    document.getElementById('userAvatar').textContent = usuario.nome.charAt(0).toUpperCase();
-                } else {
-                    document.getElementById('userName').textContent = 'Jogador Bicho777';
-                    document.getElementById('userEmail').textContent = 'jogador@bicho777.com';
+            if (!userJson) {
+                // Se não estiver logado, redireciona direto para a página de login
+                window.location.href = 'login.html';
+                return;
+            }
+
+            const usuarioLocal = JSON.parse(userJson);
+
+            // 2. Preenche os dados em tela com o que está no localStorage
+            if (usuarioLocal && usuarioLocal.nome) {
+                document.getElementById('userName').textContent = usuarioLocal.nome;
+                document.getElementById('userEmail').textContent = usuarioLocal.telefone || usuarioLocal.email || 'Usuário Cadastrado';
+                document.getElementById('userAvatar').textContent = usuarioLocal.nome.charAt(0).toUpperCase();
+            }
+
+            // 3. Opcional: Atualiza os dados vindo da API
+            try {
+                const res = await fetch(`${API_URL}/api/usuario/${usuarioLocal.id}`);
+                if (res.ok) {
+                    const usuarioApi = await res.json();
+                    if (usuarioApi && usuarioApi.nome) {
+                        document.getElementById('userName').textContent = usuarioApi.nome;
+                        document.getElementById('userEmail').textContent = usuarioApi.telefone || usuarioApi.email || 'Usuário Cadastrado';
+                        document.getElementById('userAvatar').textContent = usuarioApi.nome.charAt(0).toUpperCase();
+                    }
                 }
             } catch (err) {
-                console.error('Erro ao buscar dados do perfil:', err);
-                document.getElementById('userName').textContent = 'Jogador Bicho777';
-                document.getElementById('userEmail').textContent = 'jogador@bicho777.com';
+                console.error('Erro ao buscar dados atualizados do perfil:', err);
             }
         }
 
+        // FUNÇÃO DE LOGOUT REAL
         function fazerLogout() {
             if (confirm('Deseja realmente sair da sua conta?')) {
-                window.location.href = 'index.html';
+                // Limpa as chaves salvas no navegador
+                localStorage.removeItem('user');
+                localStorage.removeItem('token');
+                sessionStorage.clear();
+
+                // Redireciona o usuário para a página de login
+                window.location.href = 'login.html';
             }
         }
 
         carregarDadosPerfil();
     </script>
+
 </body>
 </html>
