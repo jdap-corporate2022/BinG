@@ -705,12 +705,12 @@
         </div>
     </div>
 
-    <!-- MODAL DE LOGIN OBRIGATÓRIO PARA APOSTAR -->
+    <!-- MODAL DE LOGIN OBRIGATÓRIO -->
     <div id="modalAuthRequired" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000; align-items: center; justify-content: center; padding: 16px;">
         <div style="background: #011f0f; border: 1px solid #10e36b; border-radius: 12px; padding: 24px; text-align: center; max-width: 320px; width: 100%; color: #fff; box-shadow: 0 0 20px rgba(16, 227, 107, 0.25);">
             <div style="font-size: 40px; margin-bottom: 10px;">🔐</div>
             <h2 style="color: #ffc200; font-size: 18px; margin-bottom: 8px;">Login Necessário</h2>
-            <p style="color: #c4d4cc; font-size: 13px; margin-bottom: 20px; line-height: 1.4;">Você precisa estar conectado para poder escolher os palpites e apostar.</p>
+            <p style="color: #c4d4cc; font-size: 13px; margin-bottom: 20px; line-height: 1.4;">Você precisa estar conectado para acessar esta funcionalidade.</p>
             
             <div style="display: flex; flex-direction: column; gap: 10px;">
                 <a href="login.html" style="background: #ffc200; color: #000; padding: 12px; border-radius: 8px; font-weight: 900; text-decoration: none; font-size: 14px;">ENTRAR NA CONTA</a>
@@ -815,19 +815,46 @@
             showModal("Como Jogar?", "Escolha seu grupo ou dezena, informe o valor da sua aposta e confirme seu palpite.");
         });
 
-        // TRAVA DO BOTÃO "FAÇA SUA APOSTA"
+        // BLOQUEIO / NAVEGAÇÃO PROTEGIDA
         function fecharModalAuth() {
             document.getElementById('modalAuthRequired').style.display = 'none';
         }
 
-        document.getElementById('btnApostar').addEventListener('click', function(e) {
+        function interceptarCliqueSeDeslogado(event) {
             const userJson = localStorage.getItem('user');
             
-            // Se NÃO houver usuário logado no localStorage
+            // Se NÃO houver usuário logado
             if (!userJson) {
-                e.preventDefault(); // Impede o redirecionamento para apostar.html
-                document.getElementById('modalAuthRequired').style.display = 'flex'; // Exibe o Pop-up
+                event.preventDefault(); // Impede a navegação
+                
+                // Fecha o menu lateral se estiver aberto
+                toggleMenu(false);
+                
+                // Exibe o Pop-up de Login Obrigatório
+                document.getElementById('modalAuthRequired').style.display = 'flex';
+                return false;
             }
+            return true;
+        }
+
+        // APLICAÇÃO DAS TRAVAS EM TODOS OS PONTOS DE NAVEGAÇÃO PROTEGIDA
+
+        // 1. Botão Principal "FAÇA SUA APOSTA"
+        document.getElementById('btnApostar').addEventListener('click', interceptarCliqueSeDeslogado);
+
+        // 2. Links para "Minhas Apostas" (Menu Lateral e Barra Inferior)
+        document.querySelectorAll('a[href="minhas-apostas.html"]').forEach(element => {
+            element.addEventListener('click', interceptarCliqueSeDeslogado);
+        });
+
+        // 3. Links para "Resultados" (Card Superior, Menu Lateral e Barra Inferior)
+        document.querySelectorAll('a[href="resultados.html"]').forEach(element => {
+            element.addEventListener('click', interceptarCliqueSeDeslogado);
+        });
+
+        // 4. Links para "Perfil" (Menu Lateral e Barra Inferior)
+        document.querySelectorAll('a[href="perfil.html"]').forEach(element => {
+            element.addEventListener('click', interceptarCliqueSeDeslogado);
         });
 
         // Inicializa a verificação de login ao carregar a página
