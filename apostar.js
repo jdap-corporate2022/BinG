@@ -1,177 +1,144 @@
-<script>
-    const API_URL = 'https://bing-j6vi.onrender.com';
-    const urlParams = new URLSearchParams(window.location.search);
-    const betType = urlParams.get('type') || 'grupo';
-    const rawVal = parseFloat(urlParams.get('val'));
-    const betVal = isNaN(rawVal) || rawVal < 1 ? 2.00 : rawVal; 
-    const maxSelections = parseInt(urlParams.get('max')) || 1;
+// Aguarda o carregamento completo da árvore DOM
+document.addEventListener('DOMContentLoaded', () => {
+    inicializarTelaAposta();
+});
 
-    let selectedItems = [];
-    let saldoAtual = 0;
+function inicializarTelaAposta() {
+    gerarGrupos();
+    gerarDezenas();
 
-    async function carregarSaldo() {
-        try {
-            const res = await fetch(`${API_URL}/api/usuario/1/saldo`);
-            const data = await res.json();
-            if (data.saldo !== undefined) {
-                saldoAtual = data.saldo;
-                document.getElementById('userBalance').textContent = `R$ ${saldoAtual.toFixed(2).replace('.', ',')}`;
-            }
-        } catch (err) {
-            console.error('Erro ao carregar saldo:', err);
-        }
-    }
-
-    document.getElementById('infoType').textContent = `TIPO: ${betType === 'grupo' ? 'GRUPO' : 'DEZENA'}`;
-    document.getElementById('infoValue').textContent = `VALOR: R$ ${betVal.toFixed(2).replace('.', ',')}`;
-    document.getElementById('infoLimit').textContent = `LIMITE: ${maxSelections}`;
-
-    if (betType === 'grupo') {
-        const container = document.getElementById('groupsContainer');
-        container.classList.remove('hidden');
-        const grid = document.getElementById('gridGroups');
-
-        for (let i = 1; i <= 25; i++) {
-            const btn = document.createElement('button');
-            btn.className = 'bet-num-btn';
-            btn.textContent = i;
-            btn.addEventListener('click', () => handleSelect(btn, i.toString().padStart(2, '0')));
-            grid.appendChild(btn);
-        }
-    } else {
-        const container = document.getElementById('dezenasContainer');
-        container.classList.remove('hidden');
-        const grid = document.getElementById('gridDezenas');
-
-        for (let i = 0; i <= 99; i++) {
-            const btn = document.createElement('button');
-            btn.className = 'bet-num-btn';
-            const val = i.toString().padStart(2, '0');
-            btn.textContent = val;
-            btn.addEventListener('click', () => handleSelect(btn, val));
-            grid.appendChild(btn);
-        }
-    }
-
-    function handleSelect(btn, item) {
-        if (selectedItems.includes(item)) {
-            selectedItems = selectedItems.filter(i => i !== item);
-            btn.classList.remove('selected');
-        } else {
-            if (selectedItems.length >= maxSelections) {
-                alert(`Você pode selecionar no máximo ${maxSelections} opção(ões).`);
-                return;
-            }
-            selectedItems.push(item);
-            btn.classList.add('selected');
-        }
-    }
-
-
-        // Função para validar se o usuário está logado
-function validarAcesso() {
-    const user = localStorage.getItem('user');
-    if (!user) {
-        alert('Você precisa estar logado para fazer uma aposta e gerar o pagamento!');
-        window.location.href = 'login.html';
-        return false;
-    }
-    return true;
+    // Estado local da aposta
+    window.apostaAtual = {
+        tipo: null,
+        palpite: null,
+        valor: 5.00
+    };
 }
 
-// Exemplo: no evento de clique do botão "Gera PIX" ou "Confirmar Aposta"
-document.getElementById('btnGerarPix').addEventListener('click', function(e) {
-    if (!validarAcesso()) {
-        e.preventDefault(); // Impede o envio se não estiver logado
+// GERA OS 25 GRUPOS (1 A 25)
+function gerarGrupos() {
+    const gridGroups = document.getElementById('gridGroups');
+    if (!gridGroups) {
+        console.error('Elemento #gridGroups não encontrado no HTML.');
         return;
     }
 
-    // Segue o fluxo normal de gerar o PIX...
-});
-        
+    gridGroups.innerHTML = '';
+    for (let i = 1; i <= 25; i++) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn-num';
+        btn.textContent = i;
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            selecionarPalpite('grupo', i, btn);
+        });
+        gridGroups.appendChild(btn);
+    }
+}
 
-    document.getElementById('confirmBet').addEventListener('click', async () => {
-        if (selectedItems.length === 0) {
-            alert('Selecione ao menos um palpite.');
-            return;
-        }
+// GERA AS 100 DEZENAS (00 A 99)
+function gerarDezenas() {
+    const gridDezenas = document.getElementById('gridDezenas');
+    if (!gridDezenas) {
+        console.error('Elemento #gridDezenas não encontrado no HTML.');
+        return;
+    }
 
-        // Se o saldo for menor que o valor da aposta, abre o Pop-up com botão para Depositar
-        if (saldoAtual < betVal) {
-            document.getElementById('balanceModal').style.display = 'flex';
-            return;
-        }
+    gridDezenas.innerHTML = '';
+    for (let i = 0; i <= 99; i++) {
+        const valStr = i.toString().padStart(2, '0');
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'btn-num';
+        btn.textContent = valStr;
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            selecionarPalpite('dezena', valStr, btn);
+        });
+        gridDezenas.appendChild(btn);
+    }
+}
 
-        const btnConfirmar = document.getElementById('confirmBet');
-        btnConfirmar.disabled = true;
-        btnConfirmar.textContent = 'REGISTRANDO...';
-
-        try {
-            const response = await fetch(`${API_URL}/api/apostas`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    usuario_id: 1,
-                    modalidade: betType === 'grupo' ? 'Grupo' : 'Dezena',
-                    palpites: selectedItems,
-                    valor: betVal
-                })
-            });
-
-            const data = await response.json();
-
-            if (response.ok) {
-                document.getElementById('successModal').style.display = 'flex';
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 2500);
-            } else {
-                alert(data.error || 'Erro ao registrar aposta.');
-                btnConfirmar.disabled = false;
-                btnConfirmar.textContent = 'FINALIZAR APOSTA ❯';
-            }
-        } catch (error) {
-            console.error('Erro na requisição:', error);
-            alert('Erro de conexão com o servidor.');
-            btnConfirmar.disabled = false;
-            btnConfirmar.textContent = 'FINALIZAR APOSTA ❯';
-        }
+// SELEÇÃO E DESTAQUE DOS BOTÕES
+function selecionarPalpite(tipo, valor, elementoBtn) {
+    document.querySelectorAll('.btn-num').forEach(btn => {
+        btn.classList.remove('selected');
     });
 
-    function fecharModalSaldo() {
-        document.getElementById('balanceModal').style.display = 'none';
-    }
+    elementoBtn.classList.add('selected');
 
-    carregarSaldo();
+    window.apostaAtual.tipo = tipo;
+    window.apostaAtual.palpite = valor;
 
-
-        // Função para verificar se o usuário está logado
-function verificarLoginParaApostar() {
-    const user = localStorage.getItem('user');
-    
-    if (!user) {
-        // Exibe o modal se não estiver logado
-        const modal = document.getElementById('modalAuthRequired');
-        modal.style.display = 'flex';
-        return false;
-    }
-    return true;
+    processarAposta();
 }
 
-// Função para fechar o modal
-function fecharModalLogin() {
-    document.getElementById('modalAuthRequired').style.display = 'none';
-}
-
-// Exemplo de uso no clique do botão de Apostar / Gerar PIX:
-document.getElementById('btnFinalizarAposta').addEventListener('click', function(e) {
-    // Interrompe o fluxo se não estiver logado
-    if (!verificarLoginParaApostar()) {
-        e.preventDefault();
+// VALIDAÇÃO SILENCIOSA E PROCESSAMENTO
+function processarAposta() {
+    // 1. Verificação de Autenticação
+    const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado') || 'null');
+    if (!usuarioLogado) {
+        abrirModalLogin();
         return;
     }
 
-    // Se estiver logado, segue com o envio dos palpites e PIX...
-});
-        
-    </script>
+    // 2. Verificação de Saldo nos bastidores
+    const saldoDisponivel = parseFloat(localStorage.getItem('userBalance') || '0.00');
+    const valorAposta = window.apostaAtual.valor || 2.00;
+
+    if (saldoDisponivel < valorAposta) {
+        abrirModalSaldo();
+        return;
+    }
+
+    // 3. Débito e confirmação
+    const novoSaldo = saldoDisponivel - valorAposta;
+    localStorage.setItem('userBalance', novoSaldo.toFixed(2));
+
+    salvarHistoricoAposta({
+        data: new Date().toLocaleString('pt-BR'),
+        tipo: window.apostaAtual.tipo.toUpperCase(),
+        palpite: window.apostaAtual.palpite,
+        valor: valorAposta
+    });
+
+    abrirModalSucesso();
+}
+
+function salvarHistoricoAposta(aposta) {
+    const historico = JSON.parse(localStorage.getItem('minhasApostas') || '[]');
+    historico.unshift(aposta);
+    localStorage.setItem('minhasApostas', JSON.stringify(historico));
+}
+
+// CONTROLE DOS MODAIS
+function abrirModalSaldo() {
+    const modal = document.getElementById('balanceModal');
+    if (modal) modal.style.display = 'flex';
+}
+
+function fecharModalSaldo() {
+    const modal = document.getElementById('balanceModal');
+    if (modal) modal.style.display = 'none';
+}
+
+function abrirModalLogin() {
+    const modal = document.getElementById('modalAuthRequired');
+    if (modal) modal.style.display = 'flex';
+}
+
+function fecharModalLogin() {
+    const modal = document.getElementById('modalAuthRequired');
+    if (modal) modal.style.display = 'none';
+}
+
+function abrirModalSucesso() {
+    const modal = document.getElementById('successModal');
+    if (modal) {
+        modal.style.display = 'flex';
+        setTimeout(() => {
+            window.location.href = 'apostas.html';
+        }, 2000);
+    }
+}
