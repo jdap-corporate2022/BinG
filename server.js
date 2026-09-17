@@ -406,5 +406,67 @@ app.post('/api/saque', async (req, res) => {
     }
 });
 
+// ROTA: Métrica e Dados Consolidados para o Painel Admin (admin.html)
+app.get('/api/admin/dashboard', async (req, res) => {
+    try {
+        // 1. Total Depositado (apenas depósitos aprovados via Mercado Pago)
+        const totalDepRes = await pool.query(
+            "SELECT COALESCE(SUM(valor), 0) AS total FROM pagamentos_pix WHERE status = 'approved'"
+        );
+        
+        // 2. Total de Saques Aprovados
+        const totalSaquesRes = await pool.query(
+            "SELECT COALESCE(SUM(valor), 0) AS total FROM saques WHERE status = 'concluido' OR status = 'aprovado'"
+        );
+
+        // 3. Total de Usuários Cadastrados (ignorando a conta admin)
+        const totalUsersRes = await pool.query(
+            "SELECT COUNT(id) AS total FROM usuarios WHERE is_admin = FALSE OR is_admin IS NULL"
+        );
+
+        // 4. Volume Total de Apostas
+        const totalApostasRes = await pool.query(
+            "SELECT COALESCE(SUM(valor), 0) AS total FROM apostas"
+        );
+
+        // 5. Lista de Saques Pendentes
+        const saquesPendentesRes = await pool.query(`
+            SELECT s.id, u.nome AS "nomeUsuario", s.chave_pix AS "chavePix", s.valor
+            FROM saques s
+            JOIN usuarios u ON s.usuario_id = u.id
+            WHERE s.status = 'pendente'
+            ORDER BY s.criado_em DESC
+        `);
+
+        // 6. Lista de Todos os Usuários e seus respectivos Saldos
+        const listaUsuariosRes = await pool.query(`
+            SELECT u.id, u.nome, u.telefone AS email, COALESCE(c.saldo, 0.00) AS saldo
+            FROM usuarios u
+            LEFT JOIN carteiras c ON u.id = c.usuario_id
+            WHERE u.is_admin = FALSE OR u.is_admin IS NULL
+            ORDER BY u.id DESC
+        `);
+
+        // Retorna a estrutura que o admin.html espera consumir
+        res.json({
+            totalDepositado: parseFloat(totalDepRes.rows[0].total),
+            totalSaques: parseFloat(totalSaquesRes.rows[0].total),
+            totalUsuarios: parseInt(totalUsersRes.rows[0].total, 10),
+            totalApostado: parseFloat(totalApostasRes.rows[0].total),
+            saquesPendentes: saquesPendentesRes.rows,
+            depositosPendentes: [], // Pagamentos PIX via MP já caem automático pelo Webhook
+            listaUsuarios: listaUsuariosRes.rows.map(u => ({
+                ...u,
+                saldo: parseFloat(u.saldo)
+            }))
+        });
+
+    } catch (error) {
+        console.error('Erro ao gerar dados do dashboard admin:', error);
+        res.status(500).json({ error: 'Erro ao buscar métricas do sistema.' });
+    }
+});
+
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
