@@ -71,7 +71,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* MOLDURA PRINCIPAL COM BORDA AMARELA */
+        /* MOLDURA PRINCIPAL */
         .main-card {
             border: 1.5px solid #ffc200;
             border-radius: 16px;
@@ -148,7 +148,7 @@
             font-weight: 800;
         }
 
-        /* SEÇÃO DE CADA MODALIDADE */
+        /* SEÇÕES DE APOSTA */
         .section-box {
             border: 1px solid rgba(0, 255, 120, 0.25);
             border-radius: 12px;
@@ -207,7 +207,6 @@
             box-shadow: 0 0 6px #ffc200;
         }
 
-        /* MENSAGEM INFERIOR DE INSTRUÇÃO */
         .footer-msg {
             text-align: center;
             color: #10e36b;
@@ -220,7 +219,7 @@
             gap: 4px;
         }
 
-        /* NAVBAR INFERIOR FIXA */
+        /* NAVBAR INFERIOR */
         .navbar-bottom {
             position: fixed;
             bottom: 0;
@@ -255,7 +254,7 @@
             margin-bottom: 2px;
         }
 
-        /* ESTILOS DOS MODAIS DE SISTEMA */
+        /* MODAIS */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -274,7 +273,6 @@
             text-align: center;
             color: #fff;
             box-shadow: 0 0 20px rgba(255, 194, 0, 0.25);
-            animation: popIn 0.3s ease-out;
         }
 
         .modal-card-success {
@@ -312,16 +310,11 @@
             font-weight: 700;
             cursor: pointer;
         }
-
-        @keyframes popIn {
-            0% { transform: scale(0.8); opacity: 0; }
-            100% { transform: scale(1); opacity: 1; }
-        }
     </style>
 </head>
 <body>
     <div class="app">
-        <!-- HEADER SEM A CAIXA DE SALDO -->
+        <!-- HEADER -->
         <header class="header">
             <div class="header-left">
                 <a href="javascript:history.back()" class="menu-btn">☰</a>
@@ -332,16 +325,14 @@
             </div>
         </header>
 
-        <!-- CARD PRINCIPAL AMARELO DA IMAGEM -->
+        <!-- CARD PRINCIPAL -->
         <div class="main-card">
             <!-- BANNER TOPO -->
             <div class="banner-box">
                 <div class="close-x" onclick="window.location.href='index.html'">✕</div>
                 <div class="banner-title">Bicho777Bet ☘</div>
                 <div class="banner-sub">A SORTE É SEU MELHOR PALPITE!</div>
-                <button class="btn-faca-aposta">
-                    🎲 <div>FAÇA SUA APOSTA<span>ESCOLHA O TIPO DE APOSTA</span></div>
-                </button>
+                
             </div>
 
             <!-- SEÇÃO GRUPO (1 A 25) -->
@@ -350,7 +341,33 @@
                     <div class="section-title">🐾 GRUPO</div>
                     <div class="section-desc">ESCOLHA UM DOS 25 GRUPOS DO<br>SEU BICHO DA SORTE!</div>
                 </div>
-                <div class="grid-numbers" id="gridGroups"></div>
+                <div class="grid-numbers" id="gridGroups">
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 1, this)">1</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 2, this)">2</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 3, this)">3</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 4, this)">4</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 5, this)">5</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 6, this)">6</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 7, this)">7</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 8, this)">8</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 9, this)">9</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 10, this)">10</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 11, this)">11</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 12, this)">12</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 13, this)">13</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 14, this)">14</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 15, this)">15</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 16, this)">16</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 17, this)">17</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 18, this)">18</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 19, this)">19</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 20, this)">20</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 21, this)">21</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 22, this)">22</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 23, this)">23</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 24, this)">24</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('grupo', 25, this)">25</button>
+                </div>
             </div>
 
             <!-- SEÇÃO DEZENAS (00 A 99) -->
@@ -359,11 +376,115 @@
                     <div class="section-title"># DEZENAS</div>
                     <div class="section-desc">ESCOLHA UMA DAS 100 DEZENAS DE<br>00 A 99!</div>
                 </div>
-                <div class="grid-numbers" id="gridDezenas"></div>
+                <div class="grid-numbers" id="gridDezenas">
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '00', this)">00</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '01', this)">01</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '02', this)">02</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '03', this)">03</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '04', this)">04</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '05', this)">05</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '06', this)">06</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '07', this)">07</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '08', this)">08</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '09', this)">09</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '10', this)">10</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '11', this)">11</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '12', this)">12</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '13', this)">13</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '14', this)">14</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '15', this)">15</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '16', this)">16</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '17', this)">17</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '18', this)">18</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '19', this)">19</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '20', this)">20</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '21', this)">21</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '22', this)">22</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '23', this)">23</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '24', this)">24</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '25', this)">25</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '26', this)">26</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '27', this)">27</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '28', this)">28</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '29', this)">29</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '30', this)">30</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '31', this)">31</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '32', this)">32</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '33', this)">33</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '34', this)">34</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '35', this)">35</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '36', this)">36</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '37', this)">37</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '38', this)">38</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '39', this)">39</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '40', this)">40</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '41', this)">41</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '42', this)">42</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '43', this)">43</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '44', this)">44</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '45', this)">45</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '46', this)">46</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '47', this)">47</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '48', this)">48</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '49', this)">49</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '50', this)">50</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '51', this)">51</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '52', this)">52</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '53', this)">53</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '54', this)">54</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '55', this)">55</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '56', this)">56</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '57', this)">57</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '58', this)">58</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '59', this)">59</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '60', this)">60</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '61', this)">61</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '62', this)">62</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '63', this)">63</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '64', this)">64</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '65', this)">65</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '66', this)">66</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '67', this)">67</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '68', this)">68</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '69', this)">69</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '70', this)">70</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '71', this)">71</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '72', this)">72</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '73', this)">73</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '74', this)">74</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '75', this)">75</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '76', this)">76</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '77', this)">77</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '78', this)">78</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '79', this)">79</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '80', this)">80</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '81', this)">81</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '82', this)">82</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '83', this)">83</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '84', this)">84</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '85', this)">85</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '86', this)">86</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '87', this)">87</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '88', this)">88</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '89', this)">89</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '90', this)">90</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '91', this)">91</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '92', this)">92</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '93', this)">93</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '94', this)">94</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '95', this)">95</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '96', this)">96</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '97', this)">97</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '98', this)">98</button>
+                    <button type="button" class="btn-num" onclick="selecionarPalpite('dezena', '99', this)">99</button>
+                </div>
             </div>
 
             <div class="footer-msg">🎯 ESCOLHA UMA OPÇÃO PARA CONTINUAR</div>
         </div>
+        <button class="btn-faca-aposta">
+                    🎲 <div>FAÇA SUA APOSTA<span>ESCOLHA O TIPO DE APOSTA</span></div>
+        </button>
     </div>
 
     <!-- NAVBAR INFERIOR -->
