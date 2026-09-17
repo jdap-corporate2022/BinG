@@ -483,5 +483,44 @@ app.get('/api/admin/dashboard', async (req, res) => {
     }
 });
 
+
+// ROTA: Alteração Manual de Saldo pelo Painel Admin (admin.html)
+app.post('/api/admin/usuario/saldo', async (req, res) => {
+    const { userId, valor } = req.body;
+    const valorNum = parseFloat(valor);
+
+    if (!userId || isNaN(valorNum)) {
+        return res.status(400).json({ error: 'ID do usuário e valor numérico são obrigatórios.' });
+    }
+
+    try {
+        // Atualiza o saldo somando ou subtraindo o valor enviado
+        const result = await pool.query(`
+            UPDATE carteiras 
+            SET saldo = saldo + $1, atualizado_em = NOW() 
+            WHERE usuario_id = $2 
+            RETURNING saldo
+        `, [valorNum, userId]);
+
+        if (result.rows.length === 0) {
+            // Caso o usuário ainda não tenha uma linha na tabela carteiras, cria uma
+            await pool.query(
+                'INSERT INTO carteiras (usuario_id, saldo) VALUES ($1, $2)',
+                [userId, Math.max(0, valorNum)]
+            );
+            return res.json({ success: true, novoSaldo: Math.max(0, valorNum) });
+        }
+
+        res.json({
+            success: true,
+            novoSaldo: parseFloat(result.rows[0].saldo)
+        });
+
+    } catch (error) {
+        console.error('Erro ao alterar saldo manualmente:', error);
+        res.status(500).json({ error: 'Erro ao atualizar saldo no banco de dados.' });
+    }
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`Servidor rodando na porta ${PORT}`));
