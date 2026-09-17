@@ -239,9 +239,14 @@ app.get('/api/usuario/:id/saldo', async (req, res) => {
     }
 });
 
-// ROTA: Gerar PIX (Depósito)
+// ROTA: Gerar PIX (Depósito / Aposta)
 app.post('/api/pagamentos/pix', async (req, res) => {
     const { usuario_id, valor } = req.body;
+
+    // BLOQUEIO: Se não enviar usuario_id ou for inválido, rejeita
+    if (!usuario_id) {
+        return res.status(401).json({ error: 'Usuário não autenticado. Faça login para continuar.' });
+    }
 
     const valorFinal = Number(valor) >= 1 ? Number(valor) : 2.00;
 
@@ -262,7 +267,7 @@ app.post('/api/pagamentos/pix', async (req, res) => {
 
         await pool.query(
             'INSERT INTO pagamentos_pix (usuario_id, mp_payment_id, valor, status) VALUES ($1, $2, $3, $4)',
-            [usuario_id || 1, mpResponse.id, valorFinal, mpResponse.status]
+            [usuario_id, mpResponse.id, valorFinal, mpResponse.status]
         );
 
         res.status(200).json({
@@ -276,6 +281,7 @@ app.post('/api/pagamentos/pix', async (req, res) => {
         res.status(500).json({ error: 'Erro ao gerar cobrança PIX. Verifique os dados fornecidos.' });
     }
 });
+
 
 // ROTA: Webhook Mercado Pago
 app.post('/api/webhooks/mercadopago', async (req, res) => {
