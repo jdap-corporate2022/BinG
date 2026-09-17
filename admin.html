@@ -29,7 +29,7 @@
             max-width: 480px;
             min-height: 100vh;
             padding: 16px;
-            padding-bottom: 40px;
+            padding-bottom: 50px;
         }
 
         /* HEADER */
@@ -51,7 +51,7 @@
         .header span {
             color: #ffc200;
             display: block;
-            font-size: 14px;
+            font-size: 12px;
         }
 
         .btn-logout {
@@ -63,13 +63,12 @@
             font-weight: 800;
             font-size: 12px;
             cursor: pointer;
-            text-decoration: none;
         }
 
-        /* CARDS DASHBOARD */
+        /* METRICAS */
         .metrics-grid {
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
             gap: 10px;
             margin-bottom: 20px;
         }
@@ -78,25 +77,24 @@
             background: rgba(0, 31, 15, 0.8);
             border: 1px solid rgba(0, 230, 118, 0.2);
             border-radius: 10px;
-            padding: 14px;
+            padding: 12px;
         }
 
         .metric-title {
-            font-size: 11px;
+            font-size: 10px;
             color: #8da496;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.5px;
             margin-bottom: 4px;
         }
 
         .metric-value {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 900;
             color: #ffc200;
         }
 
-        /* SEÇÕES DE GERENCIAMENTO */
+        /* SEÇÕES DO PAINEL */
         .admin-section {
             background: rgba(1, 23, 11, 0.9);
             border: 1px solid rgba(0, 255, 120, 0.15);
@@ -106,7 +104,7 @@
         }
 
         .admin-section h2 {
-            font-size: 14px;
+            font-size: 13px;
             color: #10e36b;
             margin-bottom: 12px;
             text-transform: uppercase;
@@ -116,7 +114,12 @@
             gap: 6px;
         }
 
-        /* TABELA SIMPLES */
+        /* TABELAS */
+        .table-wrapper {
+            width: 100%;
+            overflow-x: auto;
+        }
+
         .data-table {
             width: 100%;
             border-collapse: collapse;
@@ -134,6 +137,30 @@
             font-weight: 700;
         }
 
+        /* BOTÕES DE AÇÃO */
+        .btn-approve {
+            background: #10e36b;
+            color: #000;
+            border: 0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 800;
+            font-size: 10px;
+            cursor: pointer;
+            margin-right: 4px;
+        }
+
+        .btn-reject {
+            background: #ff3333;
+            color: #fff;
+            border: 0;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-weight: 800;
+            font-size: 10px;
+            cursor: pointer;
+        }
+
         /* FORMULÁRIOS */
         .form-group {
             display: flex;
@@ -148,7 +175,7 @@
             border: 1px solid rgba(0, 255, 120, 0.3);
             border-radius: 6px;
             color: #fff;
-            font-size: 13px;
+            font-size: 12px;
         }
 
         .btn-action {
@@ -159,33 +186,23 @@
             border-radius: 6px;
             color: #fff;
             font-weight: 800;
-            font-size: 13px;
-            cursor: pointer;
-        }
-
-        .btn-approve {
-            background: #10e36b;
-            color: #000;
-            border: 0;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-weight: 800;
+            font-size: 12px;
             cursor: pointer;
         }
     </style>
 </head>
 <body>
     <div class="app">
-        <!-- CABEÇALHO DO PAINEL -->
+        <!-- HEADER -->
         <header class="header">
             <div>
                 <h1>Painel de Controle</h1>
-                <span>Bicho777Bet</span>
+                <span>Bicho777Bet - Gestão Global</span>
             </div>
             <button class="btn-logout" onclick="fazerLogoutAdmin()">Sair</button>
         </header>
 
-        <!-- DASHBOARD DE MÉTRICAS DA API -->
+        <!-- CARDS DE MÉTRICAS -->
         <section class="metrics-grid">
             <div class="metric-card">
                 <div class="metric-title">Total Depositado</div>
@@ -208,59 +225,163 @@
             </div>
         </section>
 
-        <!-- LANÇAMENTO DE RESULTADOS (resultados.html) -->
+        <!-- CADASTRAR RESULTADOS DOS SORTEIOS -->
         <section class="admin-section">
-            <h2>🏆 Cadastrar Resultado</h2>
+            <h2>🏆 Cadastrar Resultado do Sorteio</h2>
             <form class="form-group" id="formResultado" onsubmit="salvarResultado(event)">
-                <input type="text" class="form-input" id="resHorario" placeholder="Horário (ex: 14:30 - PTM)" required>
-                <input type="text" class="form-input" id="resMilhar" placeholder="Milhar / Bicho (ex: 4521 - Touro)" required>
+                <input type="text" class="form-input" id="resHorario" placeholder="Horário / Banca (ex: 14:30 - PTM)" required>
+                <input type="text" class="form-input" id="resMilhar" placeholder="Milhar / Bicho (ex: 1º Premio 4521 - Touro)" required>
                 <button type="submit" class="btn-action">PUBLICAR RESULTADO</button>
             </form>
         </section>
 
-        <!-- SOLICITAÇÕES DE SAQUE (saque.html) -->
+        <!-- APROVAÇÃO DE DEPÓSITOS -->
         <section class="admin-section">
-            <h2>💸 Soluções de Saque Pendentes</h2>
-            <table class="data-table">
-                <thead>
-                    <tr>
-                        <th>Usuário</th>
-                        <th>Chave PIX</th>
-                        <th>Valor</th>
-                        <th>Ação</th>
-                    </tr>
-                </thead>
-                <tbody id="tabelaSaques">
-                    <tr>
-                        <td colspan="4" style="text-align: center; color: #7d9487; padding: 12px 0;">Nenhum saque pendente</td>
-                    </tr>
-                </tbody>
-            </table>
+            <h2>📥 Depósitos Pendentes</h2>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Usuário</th>
+                            <th>Valor</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaDepositos">
+                        <tr>
+                            <td colspan="3" style="text-align: center; color: #7d9487; padding: 10px 0;">Nenhum depósito pendente</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- SOLICITAÇÕES DE SAQUE (Texto Corrigido) -->
+        <section class="admin-section">
+            <h2>💸 Solicitações de Saque Pendentes</h2>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Usuário</th>
+                            <th>Chave PIX</th>
+                            <th>Valor</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaSaques">
+                        <tr>
+                            <td colspan="4" style="text-align: center; color: #7d9487; padding: 10px 0;">Nenhuma solicitação de saque</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- GESTÃO DE USUÁRIOS E AJUSTE DE SALDO -->
+        <section class="admin-section">
+            <h2>👤 Usuários & Saldo Manual</h2>
+            <div class="table-wrapper">
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Nome/Email</th>
+                            <th>Saldo</th>
+                            <th>Ação</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tabelaUsuarios">
+                        <tr>
+                            <td colspan="3" style="text-align: center; color: #7d9487; padding: 10px 0;">Nenhum usuário encontrado</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </section>
     </div>
 
     <script>
         const API_URL = 'https://bing-j6vi.onrender.com';
 
-        // CARREGA AS MÉTRICAS DO BANCO / API
-        async function carregarMetricasAdmin() {
+        // CARREGA TODAS AS INFORMAÇÕES DO SERVIDO
+        async function carregarDadosAdmin() {
             try {
                 const res = await fetch(`${API_URL}/api/admin/dashboard`);
                 if (res.ok) {
                     const data = await res.json();
-                    document.getElementById('totalDepositado').textContent = `R$ ${data.totalDepositado.toFixed(2).replace('.', ',')}`;
-                    document.getElementById('totalSaques').textContent = `R$ ${data.totalSaques.toFixed(2).replace('.', ',')}`;
-                    document.getElementById('totalUsuarios').textContent = data.totalUsuarios;
+                    document.getElementById('totalDepositado').textContent = `R$ ${(data.totalDepositado || 0).toFixed(2).replace('.', ',')}`;
+                    document.getElementById('totalSaques').textContent = `R$ ${(data.totalSaques || 0).toFixed(2).replace('.', ',')}`;
+                    document.getElementById('totalUsuarios').textContent = data.totalUsuarios || 0;
                     document.getElementById('totalApostado').textContent = `R$ ${(data.totalApostado || 0).toFixed(2).replace('.', ',')}`;
+
+                    renderizarTabelaSaques(data.saquesPendentes || []);
+                    renderizarTabelaDepositos(data.depositosPendentes || []);
+                    renderizarTabelaUsuarios(data.listaUsuarios || []);
                 }
             } catch (err) {
-                console.error('Erro ao carregar dados do painel:', err);
+                console.error('Erro ao carregar dados do admin:', err);
             }
         }
 
-        // SALVAR NOVO RESULTADO
-        async function salvarResultado(event) {
-            event.preventDefault();
+        // RENDERIZAR TABELA DE SAQUES
+        function renderizarTabelaSaques(saques) {
+            const tbody = document.getElementById('tabelaSaques');
+            if (saques.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; color: #7d9487; padding: 10px 0;">Nenhuma solicitação de saque</td></tr>';
+                return;
+            }
+            tbody.innerHTML = saques.map(s => `
+                <tr>
+                    <td>${s.nomeUsuario || s.userId}</td>
+                    <td>${s.chavePix}</td>
+                    <td>R$ ${s.valor.toFixed(2)}</td>
+                    <td>
+                        <button class="btn-approve" onclick="processarSaque(${s.id}, 'aprovar')">✓</button>
+                        <button class="btn-reject" onclick="processarSaque(${s.id}, 'recusar')">✕</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // RENDERIZAR TABELA DE DEPÓSITOS
+        function renderizarTabelaDepositos(depositos) {
+            const tbody = document.getElementById('tabelaDepositos');
+            if (depositos.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #7d9487; padding: 10px 0;">Nenhum depósito pendente</td></tr>';
+                return;
+            }
+            tbody.innerHTML = depositos.map(d => `
+                <tr>
+                    <td>${d.nomeUsuario || d.userId}</td>
+                    <td>R$ ${d.valor.toFixed(2)}</td>
+                    <td>
+                        <button class="btn-approve" onclick="processarDeposito(${d.id}, 'aprovar')">Aprovar</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // RENDERIZAR TABELA DE USUÁRIOS
+        function renderizarTabelaUsuarios(usuarios) {
+            const tbody = document.getElementById('tabelaUsuarios');
+            if (usuarios.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #7d9487; padding: 10px 0;">Nenhum usuário cadastrado</td></tr>';
+                return;
+            }
+            tbody.innerHTML = usuarios.map(u => `
+                <tr>
+                    <td>${u.nome}<br><small style="color:#6e8578">${u.email}</small></td>
+                    <td>R$ ${(u.saldo || 0).toFixed(2)}</td>
+                    <td>
+                        <button class="btn-approve" onclick="alterarSaldoManual(${u.id})">± Saldo</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // SALVAR NOVO RESULTADO DE SORTEIO
+        async function salvarResultado(e) {
+            e.preventDefault();
             const horario = document.getElementById('resHorario').value;
             const resultado = document.getElementById('resMilhar').value;
 
@@ -275,21 +396,52 @@
                     alert('Resultado cadastrado com sucesso!');
                     document.getElementById('formResultado').reset();
                 } else {
-                    alert('Erro ao cadastrar resultado.');
+                    alert('Erro ao publicar resultado.');
                 }
             } catch (err) {
-                console.error('Erro de conexão:', err);
+                console.error('Erro ao conectar com API:', err);
             }
         }
 
-        // LOGOUT ADMINISTRATIVO
+        // AÇÕES DE APROVAÇÃO E AJUSTE
+        async function processarSaque(id, acao) {
+            if(!confirm(`Deseja ${acao} este saque?`)) return;
+            await fetch(`${API_URL}/api/admin/saque/${acao}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ id })
+            });
+            carregarDadosAdmin();
+        }
+
+        async function processarDeposito(id, acao) {
+            await fetch(`${API_URL}/api/admin/deposito/${acao}`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({ id })
+            });
+            carregarDadosAdmin();
+        }
+
+        async function alterarSaldoManual(userId) {
+            const novoValor = prompt("Digite o valor a adicionar (positivo) ou remover (negativo):");
+            if (novoValor && !isNaN(novoValor)) {
+                await fetch(`${API_URL}/api/admin/usuario/saldo`, {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({ userId, valor: parseFloat(novoValor) })
+                });
+                carregarDadosAdmin();
+            }
+        }
+
         function fazerLogoutAdmin() {
             localStorage.removeItem('adminToken');
             window.location.href = 'index.html';
         }
 
-        // INICIALIZAÇÃO
-        carregarMetricasAdmin();
+        // Inicializar
+        carregarDadosAdmin();
     </script>
 </body>
 </html>
