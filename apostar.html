@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#03120a">
-    <title>Escolha os Palpites - Bicho777Bet</title>
+    <title>Bicho777Bet - Escolha sua Aposta</title>
     
     <style>
         * {
@@ -17,7 +17,7 @@
         body {
             width: 100%;
             min-height: 100vh;
-            background: #020d07 radial-gradient(circle at 50% 25%, #083b1d 0%, #03150b 50%, #010804 100%) no-repeat fixed;
+            background: #010a05;
             color: #fff;
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
             display: flex;
@@ -28,105 +28,234 @@
             width: 100%;
             max-width: 480px;
             min-height: 100vh;
-            padding: 12px;
-            background: radial-gradient(ellipse at 50% 0%, rgba(0, 255, 100, 0.15) 0%, transparent 70%);
+            padding: 12px 12px 65px 12px;
+            background: #010a05;
+            display: flex;
+            flex-direction: column;
         }
 
+        /* HEADER SUPERIOR */
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 50px;
-            border-bottom: 1px solid rgba(0, 255, 120, 0.15);
-            margin-bottom: 12px;
+            padding: 4px 0 12px 0;
         }
 
-        .back-button {
-            color: #ffc200;
-            font-size: 24px;
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .menu-btn {
+            font-size: 22px;
+            color: #ff3b30;
             text-decoration: none;
-            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
         }
 
-        .balance-box {
-            background: linear-gradient(180deg, #001f0d 0%, #001207 100%);
-            border: 1px solid rgba(255, 194, 0, 0.4);
-            border-radius: 8px;
-            padding: 4px 10px;
-            text-align: center;
+        .brand-logo {
+            font-size: 18px;
+            font-weight: 900;
+            color: #ffc200;
+            font-style: italic;
         }
 
-        .balance-label {
+        .brand-sub {
+            font-size: 7px;
+            color: #10e36b;
             display: block;
-            font-size: 8px;
-            color: #8da496;
             font-weight: 700;
             letter-spacing: 0.5px;
         }
 
-        .balance-box strong {
+        /* MOLDURA PRINCIPAL COM BORDA AMARELA */
+        .main-card {
+            border: 1.5px solid #ffc200;
+            border-radius: 16px;
+            padding: 10px;
+            background: rgba(2, 18, 9, 0.95);
+            box-shadow: inset 0 0 15px rgba(255, 194, 0, 0.08);
+            margin-bottom: 16px;
+        }
+
+        /* BANNER TOPO CARD */
+        .banner-box {
+            border: 1px solid #ffc200;
+            border-radius: 12px;
+            padding: 10px;
+            text-align: center;
+            position: relative;
+            margin-bottom: 10px;
+            background: rgba(0,0,0,0.3);
+        }
+
+        .close-x {
+            position: absolute;
+            top: 6px;
+            right: 8px;
+            background: #ffc200;
+            color: #000;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 10px;
+            font-weight: 900;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .banner-title {
+            font-size: 18px;
+            font-weight: 900;
+            color: #ffc200;
+            font-style: italic;
+        }
+
+        .banner-sub {
+            font-size: 8px;
+            color: #10e36b;
+            font-weight: 800;
+            letter-spacing: 0.5px;
+            margin-bottom: 10px;
+        }
+
+        .btn-faca-aposta {
+            background: linear-gradient(180deg, #ffdb33 0%, #f3a800 100%);
+            border: 0;
+            border-radius: 8px;
+            padding: 8px 16px;
+            color: #000;
+            font-weight: 900;
             font-size: 13px;
-            color: #fff;
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            box-shadow: 0 4px 10px rgba(243, 168, 0, 0.3);
+            text-transform: uppercase;
+        }
+
+        .btn-faca-aposta span {
+            display: block;
+            font-size: 8px;
+            color: #332200;
             font-weight: 800;
         }
 
-        .info-card {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid #ffc200;
-            border-radius: 8px;
-            padding: 8px 12px;
-            margin-bottom: 12px;
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-            color: #ffc200;
-            font-weight: bold;
+        /* SEÇÃO DE CADA MODALIDADE */
+        .section-box {
+            border: 1px solid rgba(0, 255, 120, 0.25);
+            border-radius: 12px;
+            padding: 8px;
+            margin-bottom: 10px;
+            background: rgba(0, 15, 7, 0.6);
         }
 
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .section-title {
+            color: #ffc200;
+            font-weight: 900;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .section-desc {
+            color: #8da496;
+            font-size: 8px;
+            text-align: right;
+            font-weight: 700;
+            line-height: 1.1;
+        }
+
+        /* GRIDS DOS BOTÕES */
         .grid-numbers {
             display: grid;
             grid-template-columns: repeat(10, 1fr);
             gap: 3px;
-            margin-bottom: 16px;
         }
 
-        .bet-num-btn {
-            background: linear-gradient(180deg, #022e14 0%, #01190a 100%);
+        .btn-num {
+            background: rgba(0, 25, 12, 0.9);
             border: 1px solid #10e36b;
-            border-radius: 5px;
+            border-radius: 4px;
             color: #fff;
             font-size: 10px;
             font-weight: 800;
-            padding: 8px 0;
-            cursor: pointer;
+            padding: 6px 0;
             text-align: center;
+            cursor: pointer;
         }
 
-        .bet-num-btn.selected {
+        .btn-num.selected {
             background: linear-gradient(180deg, #ffdb33 0%, #f3a800 100%);
             color: #000;
             border-color: #fff;
             box-shadow: 0 0 6px #ffc200;
         }
 
-        .submit-btn {
+        /* MENSAGEM INFERIOR DE INSTRUÇÃO */
+        .footer-msg {
+            text-align: center;
+            color: #10e36b;
+            font-size: 10px;
+            font-weight: 800;
+            margin: 6px 0 2px 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+        }
+
+        /* NAVBAR INFERIOR FIXA */
+        .navbar-bottom {
+            position: fixed;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
             width: 100%;
-            height: 50px;
-            border-radius: 12px;
-            border: 1px solid #fff2a3;
-            background: linear-gradient(180deg, #ffdb33 0%, #f3a800 60%, #c47f00 100%);
-            color: #050a06;
+            max-width: 480px;
+            background: #010d06;
+            border-top: 1px solid rgba(0, 255, 120, 0.15);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            z-index: 100;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #4a6353;
+            text-decoration: none;
+            font-size: 9px;
+            font-weight: 700;
+        }
+
+        .nav-item.active {
+            color: #ffc200;
+        }
+
+        .nav-icon {
             font-size: 16px;
-            font-weight: 900;
-            cursor: pointer;
-            box-shadow: 0 4px 15px rgba(243, 168, 0, 0.4);
+            margin-bottom: 2px;
         }
 
-        .hidden {
-            display: none;
-        }
-
-        /* Estilos dos Pop-ups / Modais */
+        /* ESTILOS DOS MODAIS DE SISTEMA */
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -192,35 +321,72 @@
 </head>
 <body>
     <div class="app">
+        <!-- HEADER SEM A CAIXA DE SALDO -->
         <header class="header">
-            <a href="valor.html" class="back-button">❮</a>
-            <span style="color:#ffc200; font-weight:900;">ESCOLHA SEUS PALPITES</span>
-            <div class="balance-box">
-                <span class="balance-label">SALDO</span>
-                <strong id="userBalance">R$ 0,00</strong>
+            <div class="header-left">
+                <a href="javascript:history.back()" class="menu-btn">☰</a>
+                <div>
+                    <div class="brand-logo">Bicho777Bet ☘</div>
+                    <span class="brand-sub">A SORTE É SEU MELHOR PALPITE!</span>
+                </div>
             </div>
         </header>
 
-        <div class="info-card">
-            <span id="infoType">TIPO: -</span>
-            <span id="infoValue">VALOR: R$ 0,00</span>
-            <span id="infoLimit">LIMITE: 0</span>
-        </div>
+        <!-- CARD PRINCIPAL AMARELO DA IMAGEM -->
+        <div class="main-card">
+            <!-- BANNER TOPO -->
+            <div class="banner-box">
+                <div class="close-x" onclick="window.location.href='index.html'">✕</div>
+                <div class="banner-title">Bicho777Bet ☘</div>
+                <div class="banner-sub">A SORTE É SEU MELHOR PALPITE!</div>
+                <button class="btn-faca-aposta">
+                    🎲 <div>FAÇA SUA APOSTA<span>ESCOLHA O TIPO DE APOSTA</span></div>
+                </button>
+            </div>
 
-        <div id="groupsContainer" class="hidden">
-            <h3 style="color:#10e36b; font-size: 12px; margin-bottom:8px;">SELECIONE O GRUPO:</h3>
-            <div class="grid-numbers" id="gridGroups"></div>
-        </div>
+            <!-- SEÇÃO GRUPO (1 A 25) -->
+            <div class="section-box">
+                <div class="section-header">
+                    <div class="section-title">🐾 GRUPO</div>
+                    <div class="section-desc">ESCOLHA UM DOS 25 GRUPOS DO<br>SEU BICHO DA SORTE!</div>
+                </div>
+                <div class="grid-numbers" id="gridGroups"></div>
+            </div>
 
-        <div id="dezenasContainer" class="hidden">
-            <h3 style="color:#10e36b; font-size: 12px; margin-bottom:8px;">SELECIONE AS DEZENAS:</h3>
-            <div class="grid-numbers" id="gridDezenas"></div>
-        </div>
+            <!-- SEÇÃO DEZENAS (00 A 99) -->
+            <div class="section-box">
+                <div class="section-header">
+                    <div class="section-title"># DEZENAS</div>
+                    <div class="section-desc">ESCOLHA UMA DAS 100 DEZENAS DE<br>00 A 99!</div>
+                </div>
+                <div class="grid-numbers" id="gridDezenas"></div>
+            </div>
 
-        <button class="submit-btn" id="confirmBet">FINALIZAR APOSTA ❯</button>
+            <div class="footer-msg">🎯 ESCOLHA UMA OPÇÃO PARA CONTINUAR</div>
+        </div>
     </div>
 
-    <!-- Pop-up Saldo Insuficiente -->
+    <!-- NAVBAR INFERIOR -->
+    <nav class="navbar-bottom">
+        <a href="index.html" class="nav-item">
+            <span class="nav-icon">🏠</span>
+            <span>Início</span>
+        </a>
+        <a href="apostas.html" class="nav-item">
+            <span class="nav-icon">📋</span>
+            <span>Minhas Apostas</span>
+        </a>
+        <a href="resultados.html" class="nav-item">
+            <span class="nav-icon">📊</span>
+            <span>Resultados</span>
+        </a>
+        <a href="perfil.html" class="nav-item">
+            <span class="nav-icon">👤</span>
+            <span>Perfil</span>
+        </a>
+    </nav>
+
+    <!-- POP-UP SALDO INSUFICIENTE -->
     <div id="balanceModal" class="modal-overlay" style="display: none;">
         <div class="modal-card">
             <div class="modal-icon">⚠️</div>
@@ -233,7 +399,7 @@
         </div>
     </div>
 
-    <!-- Pop-up Sucesso -->
+    <!-- POP-UP SUCESSO -->
     <div id="successModal" class="modal-overlay" style="display: none;">
         <div class="modal-card modal-card-success">
             <div class="modal-icon" style="color: #10e36b;">✔</div>
@@ -243,23 +409,17 @@
         </div>
     </div>
 
-    <!-- MODAL DE AVISO DE LOGIN -->
-<div class="modal" id="modalAuthRequired" style="display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 999; align-items: center; justify-content: center; padding: 16px;">
-    <div style="background: #011f0f; border: 1px solid #10e36b; border-radius: 12px; padding: 24px; text-align: center; max-width: 320px; width: 100%; color: #fff;">
-        <div style="font-size: 36px; margin-bottom: 10px;">🔐</div>
-        <h2 style="color: #ffc200; font-size: 18px; margin-bottom: 10px;">Login Necessário</h2>
-        <p style="color: #c4d4cc; font-size: 14px; margin-bottom: 20px;">Você precisa estar conectado à sua conta para realizar apostas e gerar o PIX.</p>
-        
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-            <a href="login.html" style="background: #ffc200; color: #000; padding: 12px; border-radius: 8px; font-weight: 900; text-decoration: none;">Entrar na Conta</a>
-            <a href="login.html?tab=cadastro" style="background: rgba(0, 220, 100, 0.2); color: #10e36b; border: 1px solid #10e36b; padding: 12px; border-radius: 8px; font-weight: 800; text-decoration: none;">Criar uma Conta</a>
-            <button onclick="fecharModalLogin()" style="background: transparent; border: none; color: #8da496; font-size: 13px; margin-top: 5px; cursor: pointer;">Cancelar</button>
+    <!-- POP-UP AVISO DE LOGIN -->
+    <div id="modalAuthRequired" class="modal-overlay" style="display: none;">
+        <div class="modal-card">
+            <div class="modal-icon">🔐</div>
+            <h2 style="color: #ffc200; font-size: 18px; margin-bottom: 10px;">Login Necessário</h2>
+            <p style="color: #c4d4cc; font-size: 13px; margin-bottom: 20px;">Você precisa estar conectado à sua conta para realizar apostas.</p>
+            <button class="btn-deposit" onclick="window.location.href='login.html'">ENTRAR NA CONTA ❯</button>
+            <button class="btn-cancel" onclick="fecharModalLogin()">CANCELAR</button>
         </div>
     </div>
-</div>
 
     <script src="apostar.js"></script>
-    
-    
 </body>
 </html>
