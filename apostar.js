@@ -1,15 +1,10 @@
 <script>
-    
-// Aguarda o carregamento completo da árvore DOM
+
 document.addEventListener('DOMContentLoaded', () => {
     inicializarTelaAposta();
 });
 
 function inicializarTelaAposta() {
-    gerarGrupos();
-    gerarDezenas();
-
-    // Estado local da aposta
     window.apostaAtual = {
         tipo: null,
         palpite: null,
@@ -17,67 +12,29 @@ function inicializarTelaAposta() {
     };
 }
 
-// GERA OS 25 GRUPOS (1 A 25)
-function gerarGrupos() {
-    const gridGroups = document.getElementById('gridGroups');
-    if (!gridGroups) {
-        console.error('Elemento #gridGroups não encontrado no HTML.');
-        return;
-    }
-
-    gridGroups.innerHTML = '';
-    for (let i = 1; i <= 25; i++) {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'btn-num';
-        btn.textContent = i;
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            selecionarPalpite('grupo', i, btn);
-        });
-        gridGroups.appendChild(btn);
-    }
-}
-
-// GERA AS 100 DEZENAS (00 A 99)
-function gerarDezenas() {
-    const gridDezenas = document.getElementById('gridDezenas');
-    if (!gridDezenas) {
-        console.error('Elemento #gridDezenas não encontrado no HTML.');
-        return;
-    }
-
-    gridDezenas.innerHTML = '';
-    for (let i = 0; i <= 99; i++) {
-        const valStr = i.toString().padStart(2, '0');
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'btn-num';
-        btn.textContent = valStr;
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            selecionarPalpite('dezena', valStr, btn);
-        });
-        gridDezenas.appendChild(btn);
-    }
-}
-
 // SELEÇÃO E DESTAQUE DOS BOTÕES
 function selecionarPalpite(tipo, valor, elementoBtn) {
+    // Remove o destaque de todos os botões
     document.querySelectorAll('.btn-num').forEach(btn => {
         btn.classList.remove('selected');
     });
 
+    // Adiciona o destaque ao botão clicado
     elementoBtn.classList.add('selected');
 
+    // Registra a seleção atual no estado local
     window.apostaAtual.tipo = tipo;
     window.apostaAtual.palpite = valor;
-
-    processarAposta();
 }
 
-// VALIDAÇÃO SILENCIOSA E PROCESSAMENTO
+// VALIDAÇÃO E PROCESSAMENTO AO CLICAR EM "REALIZAR APOSTA"
 function processarAposta() {
+    // Valida se o usuário escolheu um palpite
+    if (!window.apostaAtual.tipo || window.apostaAtual.palpite === null) {
+        alert('Por favor, selecione um Grupo ou uma Dezena antes de apostar.');
+        return;
+    }
+
     // 1. Verificação de Autenticação
     const usuarioLogado = JSON.parse(localStorage.getItem('usuarioLogado') || 'null');
     if (!usuarioLogado) {
@@ -85,9 +42,9 @@ function processarAposta() {
         return;
     }
 
-    // 2. Verificação de Saldo nos bastidores
+    // 2. Verificação de Saldo
     const saldoDisponivel = parseFloat(localStorage.getItem('userBalance') || '0.00');
-    const valorAposta = window.apostaAtual.valor || 2.00;
+    const valorAposta = window.apostaAtual.valor || 5.00;
 
     if (saldoDisponivel < valorAposta) {
         abrirModalSaldo();
@@ -144,4 +101,8 @@ function abrirModalSucesso() {
         }, 2000);
     }
 }
-</script>
+
+
+
+    
+<\script>
